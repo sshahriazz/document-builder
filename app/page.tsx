@@ -1,5 +1,7 @@
-import Image from "next/image";
+import React from "react";
+
+import DocumentCreator from "./components/DocumentCreator";
 
 export default function Home() {
-  return <div className=""></div>;
+  return <DocumentCreator />;
 }
