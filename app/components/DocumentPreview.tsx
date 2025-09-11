@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import RenderHeader from "@/components/RenderHeader";
+import RenderTheme from "@/components/RenderTheme";
 import DocumentControls from "@/components/DocumentControls";
 import { useUI, initUI } from "../store/ui";
 
@@ -13,7 +13,7 @@ export default function DocumentPreview() {
 
   return (
     <main className="min-h-screen flex flex-row">
-      <RenderHeader />
+      <RenderTheme />
     </main>
   );
 }

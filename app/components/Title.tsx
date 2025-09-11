@@ -2,7 +2,7 @@
 import React from "react";
 import { EditableText } from "./Block";
 import { useHeaderContent } from "../store/headerContent";
-import { useHeaderStyle } from "../store/headerStyle";
+import { useHeaderStyle } from "../store/themeStyle";
 import { useUI } from "../store/ui";
 
 export function Title() {

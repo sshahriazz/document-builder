@@ -4,7 +4,7 @@ import { EditableText } from "./Block";
 import { useHeaderContent } from "../store/headerContent";
 import { Button } from "@heroui/react";
 import { useUI } from "../store/ui";
-import { useHeaderStyle } from "../store/headerStyle";
+import { useHeaderStyle } from "../store/themeStyle";
 
 type Who = "from" | "to";
 

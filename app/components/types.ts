@@ -26,9 +26,9 @@ export type UpdateParty = <K extends keyof Party>(
 ) => void;
 
 // Header style and theming types used across the app
-export type HeaderStyleData = {
+export type ThemeStyleData = {
   themeName: string;
-  backgroundImage: string | null;
+  backgroundImage?: string;
   titleColor: string;
   textColor: string;
   backgroundColor: string;

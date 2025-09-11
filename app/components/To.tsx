@@ -5,7 +5,7 @@ import { useHeaderContent } from "../store/headerContent";
 import Emails from "./Emails";
 import Addresses from "./Addresses";
 import { useUI } from "../store/ui";
-import { useHeaderStyle } from "../store/headerStyle";
+import { useHeaderStyle } from "../store/themeStyle";
 
 export function To({ labelledById }: { labelledById?: string }) {
   const { data, setPartyField } = useHeaderContent();

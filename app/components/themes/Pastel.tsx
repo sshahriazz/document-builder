@@ -10,13 +10,13 @@ import {
   DropdownTrigger,
   Input,
 } from "@heroui/react";
-import { useHeaderStyle, themeNames } from "@/store/headerStyle";
+import { useHeaderStyle, themeNames } from "@/app/store/themeStyle";
 import { Title } from "@/components/Title";
 import { From } from "@/components/From";
 import { To } from "@/components/To";
 import { Dates } from "@/components/Dates";
 
-export default function RenderHeader() {
+export default function Pastel() {
   const { data, clearBackground, setBackgroundImage } = useHeaderStyle();
 
   const handleFileUpload = () => {
