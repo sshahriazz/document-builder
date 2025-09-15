@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { EditableText } from "./Block";
-import { useHeaderContent } from "../store/headerContent";
-import { useHeaderStyle } from "../store/themeStyle";
-import { useUI } from "../store/ui";
+import { EditableText } from "@/components/Block";
+import { useHeaderContent } from "@/store/headerContent";
+import { useHeaderStyle } from "@/store/themeStyle";
+import { useUI } from "@/store/ui";
 
 export function Title() {
   const { data, set } = useHeaderContent();

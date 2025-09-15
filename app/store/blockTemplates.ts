@@ -33,4 +33,10 @@ export const blockTemplates: BlockTemplate[] = [
     description: "Milestones and schedule",
     initialContent: "<h2>Timeline</h2><p>Milestones will be listed here…</p>",
   },
+  {
+    id: "invoice-summary",
+    name: "Invoice Summary",
+    description: "Show line items, totals and taxes",
+    initialContent: "", // content not used; structured data in block
+  },
 ];

@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 import type { ThemeName } from "@/app/store/themes";
-import ThemeSkeleton from "./ThemeSkeleton";
+import ThemeSkeleton from "./HeaderSkeleton";
 
 // Lazy-loaded theme components (no SSR because they rely on client-side state)
 const Pastel = dynamic(() => import("./Pastel"), {

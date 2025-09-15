@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { EditableText } from "./Block";
-import { useHeaderContent } from "../store/headerContent";
+import { EditableText } from "@/components/Block";
+import { useHeaderContent } from "@/store/headerContent";
 import Emails from "./Emails";
 import Addresses from "./Addresses";
-import { useUI } from "../store/ui";
-import { useHeaderStyle } from "../store/themeStyle";
+import { useUI } from "@/store/ui";
+import { useHeaderStyle } from "@/store/themeStyle";
 
 export function To({ labelledById }: { labelledById?: string }) {
   const { data, setPartyField } = useHeaderContent();

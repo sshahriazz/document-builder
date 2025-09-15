@@ -11,12 +11,13 @@ import {
   Input,
 } from "@heroui/react";
 import { useHeaderStyle, themeNames } from "@/app/store/themeStyle";
-import { Title } from "@/components/Title";
-import { From } from "@/components/From";
-import { To } from "@/components/To";
-import { Dates } from "@/components/Dates";
+import { Title } from "@/components/header-blocks/Title";
+import { From } from "@/components/header-blocks/From";
+import { To } from "@/components/header-blocks/To";
+import { Dates } from "@/components/header-blocks/Dates";
+import { useUI } from "@/app/store/ui";
 
-export default function Pastel() {
+export default function Dark() {
   const { data, clearBackground, setBackgroundImage } = useHeaderStyle();
 
   const handleFileUpload = () => {
@@ -50,26 +51,29 @@ export default function Pastel() {
   const handleFileRemove = () => {
     clearBackground();
   };
+  const { isEditing } = useUI();
 
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
       className="headerPreview w-[90%] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
     >
-      <div
-        id="bg-controls"
-        className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
-      >
-        {data.backgroundImage === null && (
-          <Button onPress={handleFileUpload}>Add Bg</Button>
-        )}
-        {data.backgroundImage !== null && (
-          <Button onPress={handleFileChange}>Edit</Button>
-        )}
-        {data.backgroundImage !== null && (
-          <Button onPress={handleFileRemove}>x</Button>
-        )}
-      </div>
+      {isEditing && (
+        <div
+          id="bg-controls"
+          className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
+        >
+          {data.backgroundImage === null && (
+            <Button onPress={handleFileUpload}>Add Bg</Button>
+          )}
+          {data.backgroundImage !== null && (
+            <Button onPress={handleFileChange}>Edit</Button>
+          )}
+          {data.backgroundImage !== null && (
+            <Button onPress={handleFileRemove}>x</Button>
+          )}
+        </div>
+      )}
       {/* Example title/text preview area */}
       <Card
         style={{

@@ -1,7 +1,7 @@
 "use client";
 import React, { memo, useMemo } from "react";
 import { useHeaderStyle } from "@/app/store/themeStyle";
-import { getThemeComponent } from "./themes";
+import { getThemeComponent } from "./headers";
 import { isThemeName, type ThemeName } from "@/app/store/themes";
 
 function useResolvedTheme(name: string): ThemeName {

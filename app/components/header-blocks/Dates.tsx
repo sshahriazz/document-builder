@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { EditableText } from "./Block";
-import { useHeaderContent } from "../store/headerContent";
+import { useHeaderContent } from "@/store/headerContent";
 
 export function Dates({ labelledById }: { labelledById?: string }) {
   const { data, set } = useHeaderContent();

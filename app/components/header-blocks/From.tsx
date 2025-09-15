@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { EditableText } from "./Block";
-import { useHeaderContent } from "../store/headerContent";
+import { EditableText } from "@/components/Block";
+import { useHeaderContent } from "@/store/headerContent";
 import Emails from "./Emails";
 import Addresses from "./Addresses";
-import { useUI } from "../store/ui";
-import { useHeaderStyle } from "../store/themeStyle";
+import { useUI } from "@/store/ui";
+import { useHeaderStyle } from "@/store/themeStyle";
 
 export function From({ labelledById }: { labelledById?: string }) {
   const { data, setPartyField } = useHeaderContent();
@@ -24,8 +24,8 @@ export function From({ labelledById }: { labelledById?: string }) {
         editable={isEditing}
         ariaLabel="Sender name"
       />
-      <Emails who="from" showAdd={isEditing} />
-      <Addresses who="from" showAdd={isEditing} />
+      <Emails who="from" showAdd={false} />
+      <Addresses who="from" showAdd={false} />
     </div>
   );
 }
