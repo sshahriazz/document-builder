@@ -3,6 +3,7 @@ import type { HeaderData, Party } from "../components/types";
 
 export type HeaderContentStore = {
   data: HeaderData;
+  hydrated: boolean; // indicates data replaced by server/mock
   // Root setters
   set: <K extends keyof HeaderData>(key: K, value: HeaderData[K]) => void;
   setMany: (patch: Partial<HeaderData>) => void;
@@ -40,6 +41,7 @@ const initialData: HeaderData = {
 
 export const useHeaderContent = create<HeaderContentStore>((set) => ({
   data: initialData,
+  hydrated: false,
   set: (key, value) => set((s) => ({ data: { ...s.data, [key]: value } })),
   setMany: (patch) => set((s) => ({ data: { ...s.data, ...patch } })),
   reset: () => set({ data: initialData }),
@@ -95,3 +97,19 @@ export const useHeaderContent = create<HeaderContentStore>((set) => ({
 }));
 
 export type { HeaderData } from "../components/types";
+
+// --- Hydration helpers ---
+export async function loadInitialHeaderData(
+  source: string = "/mock-initial-data.json"
+) {
+  try {
+    const res = await fetch(source, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed header fetch: ${res.status}`);
+    const json = await res.json();
+    if (json && json.header) {
+      useHeaderContent.setState({ data: json.header, hydrated: true });
+    }
+  } catch (e) {
+    console.warn("Header data load failed; using static defaults", e);
+  }
+}

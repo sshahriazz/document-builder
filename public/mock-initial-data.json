@@ -1,0 +1,34 @@
+{
+  "header": {
+    "invoiceName": "Service Invoice",
+    "sentDate": "2025-09-01",
+    "acceptedDate": "2025-09-10",
+    "from": {
+      "name": "Acme Corp",
+      "email": ["billing@acme.com"],
+      "address": ["123 Industrial Way", "Suite 400", "Metropolis, NY"]
+    },
+    "to": {
+      "name": "Globex LLC",
+      "email": ["accounts@globex.com"],
+      "address": ["987 Commerce Blvd", "Floor 8", "Gotham, NJ"]
+    }
+  },
+  "blocks": [
+    {
+      "blockUID": "intro-1",
+      "blockName": "Introduction",
+      "content": "Thank you for choosing Acme Corp."
+    },
+    {
+      "blockUID": "scope-1",
+      "blockName": "Scope",
+      "content": "Consulting services rendered in Q3."
+    },
+    {
+      "blockUID": "summary-1",
+      "blockName": "Summary",
+      "content": "Total due within 30 days."
+    }
+  ]
+}

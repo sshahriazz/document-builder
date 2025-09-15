@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import RenderTheme from "@/components/RenderTheme";
+import RenderTheme from "@/app/components/RenderHeader";
 import DocumentControls from "@/components/DocumentControls";
 import { useUI, initUI } from "../store/ui";
 

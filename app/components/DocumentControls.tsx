@@ -9,7 +9,6 @@ import {
   Input,
 } from "@heroui/react";
 import { useHeaderStyle, themeNames } from "@/app/store/themeStyle";
-import RenderTheme from "@/components/RenderTheme";
 
 export default function DocumentControls() {
   const { data, set, applyTheme } = useHeaderStyle();

@@ -52,60 +52,57 @@ export default function Dark() {
   };
 
   return (
-    <div className="flex-1 w-full">
-      <h1 className="text-4xl text-red-500">I am Dark</h1>
+    <div
+      style={{ backgroundImage: `url(${data.backgroundImage})` }}
+      className="headerPreview w-[90%] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
+    >
       <div
-        style={{ backgroundImage: `url(${data.backgroundImage})` }}
-        className="headerPreview w-[90%] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
+        id="bg-controls"
+        className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
       >
-        <div
-          id="bg-controls"
-          className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
-        >
-          {data.backgroundImage === null && (
-            <Button onPress={handleFileUpload}>Add Bg</Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button onPress={handleFileChange}>Edit</Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button onPress={handleFileRemove}>x</Button>
-          )}
-        </div>
-        {/* Example title/text preview area */}
-        <Card
-          style={{
-            backgroundColor: data.backgroundColor,
-            color: data.textColor,
-          }}
-          className="w-[70%] mx-auto mt-20 shadow-none"
-        >
-          <CardBody>
-            <div className="title text-4xl font-semibold tracking-tight sm:text-[44px]">
-              <Title />
-            </div>
-            <Dates />
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
-              <div className="space-y-2">
-                <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                  From
-                </div>
-                <div className="text-gray-800">
-                  <From />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                  To
-                </div>
-                <div className="text-gray-800">
-                  <To />
-                </div>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
+        {data.backgroundImage === null && (
+          <Button onPress={handleFileUpload}>Add Bg</Button>
+        )}
+        {data.backgroundImage !== null && (
+          <Button onPress={handleFileChange}>Edit</Button>
+        )}
+        {data.backgroundImage !== null && (
+          <Button onPress={handleFileRemove}>x</Button>
+        )}
       </div>
+      {/* Example title/text preview area */}
+      <Card
+        style={{
+          backgroundColor: data.backgroundColor,
+          color: data.textColor,
+        }}
+        className="w-[70%] mx-auto mt-20 shadow-none"
+      >
+        <CardBody>
+          <div className="title text-4xl font-semibold tracking-tight sm:text-[44px]">
+            <Title />
+          </div>
+          <Dates />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="space-y-2">
+              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                From
+              </div>
+              <div className="text-gray-800">
+                <From />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                To
+              </div>
+              <div className="text-gray-800">
+                <To />
+              </div>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
     </div>
   );
 }

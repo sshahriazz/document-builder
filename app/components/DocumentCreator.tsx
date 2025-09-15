@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
 
-import RenderTheme from "@/components/RenderTheme";
+import RenderHeader from "@/app/components/RenderHeader";
 import DocumentControls from "@/components/DocumentControls";
+import RenderDocument from "@/components/RenderDocument";
 
 export default function DocumentCreator() {
   return (
     <main className="min-h-screen flex flex-row bg-neutral-200/60">
-      <RenderTheme />
+      <div className="flex-1 w-full">
+        <RenderHeader />
+        <RenderDocument />
+      </div>
+
       <DocumentControls />
     </main>
   );
