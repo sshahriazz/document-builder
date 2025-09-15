@@ -14,19 +14,7 @@ function RenderDocument() {
     <div className="w-[90%] mx-auto relative">
       {blocks.map((b, i) => (
         <ControlWrapper key={b.blockUID} index={i} total={blocks.length}>
-          <DocumentBlockView
-            block={b}
-            index={i}
-            total={blocks.length}
-            onInsertAbove={() => {
-              setInsertIndex(i);
-              setShowModal(true);
-            }}
-            onInsertBelow={() => {
-              setInsertIndex(i + 1);
-              setShowModal(true);
-            }}
-          />
+          <DocumentBlockView block={b} index={i} total={blocks.length} />
         </ControlWrapper>
       ))}
 

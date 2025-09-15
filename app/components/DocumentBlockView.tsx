@@ -8,16 +8,12 @@ export interface DocumentBlockViewProps {
   block: DocumentBlock;
   index: number;
   total: number;
-  onInsertAbove: () => void;
-  onInsertBelow: () => void;
 }
 
 export function DocumentBlockView({
   block,
   index,
   total,
-  onInsertAbove,
-  onInsertBelow,
 }: DocumentBlockViewProps) {
   const { renameBlock, setBlockContent, removeBlock, moveBlock } =
     useDocumentBlocks();
@@ -29,22 +25,6 @@ export function DocumentBlockView({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {/* Top insertion zone */}
-      <div
-        className="absolute left-0 right-0 -top-3 h-6 flex items-center justify-center"
-        onMouseEnter={() => setHover(true)}
-      >
-        {hover && (
-          <button
-            aria-label="Add block above"
-            onClick={onInsertAbove}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-xs px-2 py-0.5 rounded bg-blue-500 text-white shadow"
-          >
-            +
-          </button>
-        )}
-      </div>
-
       {/* Block controls */}
       {hover && (
         <div className="absolute right-2 top-2 flex gap-1">
@@ -85,22 +65,6 @@ export function DocumentBlockView({
         editable={true}
         className="prose max-w-none"
       />
-
-      {/* Bottom insertion zone */}
-      <div
-        className="absolute left-0 right-0 -bottom-3 h-6 flex items-center justify-center"
-        onMouseEnter={() => setHover(true)}
-      >
-        {hover && (
-          <button
-            aria-label="Add block below"
-            onClick={onInsertBelow}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-xs px-2 py-0.5 rounded bg-blue-500 text-white shadow"
-          >
-            +
-          </button>
-        )}
-      </div>
     </div>
   );
 }
