@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { EditableText } from "@/components/Block";
-import { useHeaderContent } from "@/store/headerContent";
+import { useHeaderContent } from "@/app/store/header/headerContent";
 import { useHeaderStyle } from "@/store/themeStyle";
 import { useUI } from "@/store/ui";
 

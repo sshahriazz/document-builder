@@ -1,5 +1,4 @@
-import { loadInitialHeaderData } from "../store/headerContent";
-import { loadInitialBlocks } from "../store/documentBlocks";
+import { loadInitialHeaderData } from "../store/header/headerContent";
 
 let _started = false;
 let _promise: Promise<void> | null = null;
@@ -14,7 +13,6 @@ export function loadAllInitialData(source = "/mock-initial-data.json") {
   _promise = (async () => {
     await Promise.all([
       loadInitialHeaderData(source),
-      loadInitialBlocks(source),
     ]);
   })();
   return _promise;

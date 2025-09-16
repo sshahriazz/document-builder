@@ -7,8 +7,8 @@ import React, { useEffect } from "react";
 export interface TiptapEditorProps {
   editable?: boolean; // external control of edit mode
   initialContent?: string; // optional override of starting HTML
-  onUpdateHtml?: (html: string) => void; // push current HTML upward
   onReady?: () => void; // callback when editor instance is first ready
+  onUpdateHtml?: (html: string) => void; // change callback
   className?: string;
 }
 
@@ -16,14 +16,16 @@ export interface TiptapEditorProps {
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
   editable = true,
   initialContent = "<p>Hello World! 🌎️</p>",
-  onUpdateHtml,
   onReady,
+  onUpdateHtml,
   className,
 }) => {
+  // Freeze the initial content for the lifetime of this instance to avoid re-instantiation loops.
+  const frozenInitial = React.useRef(initialContent).current;
   const editor = useEditor(
     {
       extensions: [StarterKit],
-      content: initialContent,
+      content: frozenInitial,
       editable,
       immediatelyRender: false,
       onUpdate({ editor }) {
@@ -33,7 +35,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         onReady?.();
       },
     },
-    [initialContent]
+    []
   );
 
   // Efficiently toggle editability without re-instantiating editor.
