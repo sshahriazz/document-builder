@@ -9,13 +9,15 @@ import {
   Input,
 } from "@heroui/react";
 import { useHeaderStyle, themeNames } from "@/app/store/themeStyle";
+import Overview from "@/app/components/Overview";
 
 export default function DocumentControls() {
   const { data, set, applyTheme } = useHeaderStyle();
 
   return (
-    <div className="w-[400px] bg-white border border-neutral-100 px-8">
-      <h1 className="py-6 text-lg font-semibold">Header Style</h1>
+    <div className="w-[400px] bg-white border border-neutral-100 px-8 overflow-y-auto max-h-screen">
+      <Overview />
+      <h1 className="py-2 text-lg font-semibold">Header Style</h1>
       {/* Theme */}
       <div className="flex items-center justify-between w-full gap-3 py-3">
         <span className="text-sm">Theme</span>
