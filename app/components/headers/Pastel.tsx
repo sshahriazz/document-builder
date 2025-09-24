@@ -1,88 +1,23 @@
 "use client";
 import React from "react";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Card, CardBody } from "@heroui/react";
 import { useHeaderStyle } from "@/app/store/themeStyle";
 import { Title } from "@/components/header-blocks/Title";
 import { From } from "@/components/header-blocks/From";
 import { To } from "@/components/header-blocks/To";
 import { Dates } from "@/components/header-blocks/Dates";
-import { useUI } from "@/app/store/ui";
-import { HugeiconsIcon } from "@hugeicons/react"
-import { MultiplicationSignCircleFreeIcons, PlusSignIcon } from "@hugeicons/core-free-icons";
+import { BackgroundControls } from "@/components/BackgroundControls";
 
 
 export default function Pastel() {
-  const { data, clearBackground, setBackgroundImage } = useHeaderStyle();
-
-  const handleFileUpload = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        setBackgroundImage(url);
-      }
-    };
-    input.click();
-  };
-
-  const handleFileChange = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        setBackgroundImage(url);
-      }
-    };
-    input.click();
-  };
-
-  const handleFileRemove = () => {
-    clearBackground();
-  };
-  const { isEditing } = useUI();
+  const { data } = useHeaderStyle();
 
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
       className="w-[59.5rem] h-[calc(84.2rem/2)] relative mx-auto bg-no-repeat bg-center bg-[length:100%_100%]"
     >
-      {isEditing && (
-        <div
-          id="bg-controls"
-          className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
-        >
-          {data.backgroundImage === null && (
-            <Button size="sm" isIconOnly onPress={handleFileUpload}><HugeiconsIcon
-              icon={PlusSignIcon}
-              size={24}
-              color="currentColor"
-              strokeWidth={1.5}
-            /></Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button size="sm" isIconOnly onPress={handleFileChange}><HugeiconsIcon
-              icon={PlusSignIcon}
-              size={24}
-              color="currentColor"
-              strokeWidth={1.5}
-            /></Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button size="sm" isIconOnly onPress={handleFileRemove}><HugeiconsIcon
-              icon={MultiplicationSignCircleFreeIcons}
-              size={24}
-              color="currentColor"
-              strokeWidth={1.5}
-            /></Button>
-          )}
-        </div>
-      )}
+      <BackgroundControls />
       {/* Example title/text preview area */}
       <Card
       radius="none"

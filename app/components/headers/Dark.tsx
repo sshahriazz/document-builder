@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import {
-  Button,
   Card,
   CardBody,
   Dropdown,
@@ -15,65 +14,17 @@ import { Title } from "@/components/header-blocks/Title";
 import { From } from "@/components/header-blocks/From";
 import { To } from "@/components/header-blocks/To";
 import { Dates } from "@/components/header-blocks/Dates";
-import { useUI } from "@/app/store/ui";
+import { BackgroundControls } from "@/components/BackgroundControls";
 
 export default function Dark() {
-  const { data, clearBackground, setBackgroundImage } = useHeaderStyle();
-
-  const handleFileUpload = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        setBackgroundImage(url);
-      }
-    };
-    input.click();
-  };
-
-  const handleFileChange = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        setBackgroundImage(url);
-      }
-    };
-    input.click();
-  };
-
-  const handleFileRemove = () => {
-    clearBackground();
-  };
-  const { isEditing } = useUI();
+  const { data } = useHeaderStyle();
 
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
       className="headerPreview w-[210mm] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
     >
-      {isEditing && (
-        <div
-          id="bg-controls"
-          className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
-        >
-          {data.backgroundImage === null && (
-            <Button onPress={handleFileUpload}>Add Bg</Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button onPress={handleFileChange}>Edit</Button>
-          )}
-          {data.backgroundImage !== null && (
-            <Button onPress={handleFileRemove}>x</Button>
-          )}
-        </div>
-      )}
+      <BackgroundControls />
       {/* Example title/text preview area */}
       <Card
         style={{
@@ -82,25 +33,27 @@ export default function Dark() {
         }}
         className="w-[70%] mx-auto mt-20 shadow-none"
       >
-        <CardBody>
-          <div className="title text-4xl font-semibold tracking-tight sm:text-[44px]">
+        <CardBody className="p-8 sm:p-12">
+          <div className="title text-4xl sm:text-5xl font-bold leading-tight tracking-tight mb-3">
             <Title />
           </div>
-          <Dates />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="space-y-2">
-              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+          <div className="mb-10">
+            <Dates />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-widest opacity-60">
                 From
               </div>
-              <div className="text-gray-800">
+              <div className="text-base font-medium leading-relaxed">
                 <From />
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-widest opacity-60">
                 To
               </div>
-              <div className="text-gray-800">
+              <div className="text-base font-medium leading-relaxed">
                 <To />
               </div>
             </div>
