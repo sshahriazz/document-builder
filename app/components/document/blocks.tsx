@@ -15,7 +15,7 @@ export function RichTextBlock({ block }: { block: Extract<AnyDocumentBlock,{type
     updateContent(block.uuid, () => ({ html }));
   }, 400), [block.uuid, updateContent]);
   return (
-    <div className="border rounded-md bg-white p-4 shadow-sm">
+    <div className="prose prose-sm prose-neutral max-w-none leading-relaxed">
       <TiptapEditor
         editable={isEditing}
         initialContent={block.content.html}
@@ -33,12 +33,20 @@ export function TextAreaBlock({ block }: { block: Extract<AnyDocumentBlock,{type
     updateContent(block.uuid, () => ({ text: val }));
   }, 300), [block.uuid, updateContent]);
   return (
-    <textarea
-      className="w-full min-h-32 border rounded-md p-3 text-sm font-mono bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
-      readOnly={!isEditing}
-      defaultValue={block.content.text}
-      onChange={(e) => debounced(e.target.value)}
-    />
+    <div className="w-full">
+      {isEditing ? (
+        <textarea
+          className="w-full min-h-[120px] p-4 text-sm leading-relaxed bg-transparent border border-gray-200 rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          defaultValue={block.content.text}
+          onChange={(e) => debounced(e.target.value)}
+          placeholder="Enter your text here..."
+        />
+      ) : (
+        <div className="p-4 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px] text-gray-800">
+          {block.content.text || "No content"}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -84,15 +92,15 @@ export function InvoiceSummaryBlock({ block }: { block: Extract<AnyDocumentBlock
   const total = subtotal + tax;
 
   return (
-    <div className="border rounded-md bg-white p-4 shadow-sm space-y-4">
+    <div className="space-y-6">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left border-b">
-            <th className="py-1">Description</th>
-            <th className="py-1 w-20">Qty</th>
-            <th className="py-1 w-28">Unit</th>
-            <th className="py-1 w-28 text-right">Line</th>
-            {isEditing && <th className="py-1 w-10 text-right"> </th>}
+          <tr className="text-left border-b-2 border-gray-200">
+            <th className="py-3 text-xs font-semibold uppercase tracking-wider text-gray-600">Description</th>
+            <th className="py-3 w-20 text-xs font-semibold uppercase tracking-wider text-gray-600">Qty</th>
+            <th className="py-3 w-28 text-xs font-semibold uppercase tracking-wider text-gray-600">Unit Price</th>
+            <th className="py-3 w-28 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">Total</th>
+            {isEditing && <th className="py-3 w-10 text-right"> </th>}
           </tr>
         </thead>
         <tbody>
@@ -100,43 +108,54 @@ export function InvoiceSummaryBlock({ block }: { block: Extract<AnyDocumentBlock
             const lineTotal = it.quantity * it.unitPrice;
             return (
               <tr key={it.id} className="border-b last:border-none">
-                <td className="py-1">
+                <td className="py-3">
                   {isEditing ? (
                     <input
-                      className="w-full bg-transparent outline-none"
+                      className="w-full bg-transparent outline-none text-sm leading-relaxed focus:bg-gray-50 rounded px-2 py-1 border border-transparent focus:border-gray-300"
                       defaultValue={it.description}
                       onChange={(e)=> ensureItemDebouncer(it.id)("description", e.target.value, idx)}
+                      placeholder="Item description"
                     />
-                  ) : it.description}
+                  ) : (
+                    <span className="text-sm font-medium text-gray-800">{it.description}</span>
+                  )}
                 </td>
-                <td className="py-1">
+                <td className="py-3">
                   {isEditing ? (
                     <input
                       type="number"
-                      className="w-16 bg-transparent outline-none"
+                      className="w-16 bg-transparent outline-none text-sm text-center focus:bg-gray-50 rounded px-2 py-1 border border-transparent focus:border-gray-300 tabular-nums"
                       defaultValue={it.quantity}
                       onChange={(e)=> ensureItemDebouncer(it.id)("quantity", Number(e.target.value)||0, idx)}
+                      min="0"
                     />
-                  ) : it.quantity}
+                  ) : (
+                    <span className="text-sm tabular-nums text-gray-700">{it.quantity}</span>
+                  )}
                 </td>
-                <td className="py-1">
+                <td className="py-3">
                   {isEditing ? (
                     <input
                       type="number"
-                      className="w-24 bg-transparent outline-none"
+                      className="w-24 bg-transparent outline-none text-sm focus:bg-gray-50 rounded px-2 py-1 border border-transparent focus:border-gray-300 tabular-nums"
                       defaultValue={it.unitPrice}
                       step={0.01}
                       onChange={(e)=> ensureItemDebouncer(it.id)("unitPrice", Number(e.target.value)||0, idx)}
+                      min="0"
                     />
-                  ) : it.unitPrice.toFixed(2)}
+                  ) : (
+                    <span className="text-sm tabular-nums text-gray-700">{currency} {it.unitPrice.toFixed(2)}</span>
+                  )}
                 </td>
-                <td className="py-1 text-right tabular-nums">{lineTotal.toFixed(2)}</td>
+                <td className="py-3 text-right">
+                  <span className="text-sm font-medium tabular-nums text-gray-800">{currency} {lineTotal.toFixed(2)}</span>
+                </td>
                 {isEditing && (
-                  <td className="py-1 text-right">
+                  <td className="py-3 text-right">
                     <button
                       aria-label="Delete item"
                       onClick={() => handleDeleteItem(it.id)}
-                      className="text-[11px] px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600"
+                      className="text-xs px-2 py-1 rounded-md bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors border border-red-200"
                     >✕</button>
                   </td>
                 )}
@@ -145,41 +164,58 @@ export function InvoiceSummaryBlock({ block }: { block: Extract<AnyDocumentBlock
           })}
           {isEditing && (
             <tr>
-              <td colSpan={5} className="pt-2">
+              <td colSpan={5} className="pt-4">
                 <button
                   onClick={handleAddItem}
-                  className="text-xs px-3 py-1 rounded bg-neutral-200 hover:bg-neutral-300 border border-neutral-300"
+                  className="text-sm px-4 py-2 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors border border-blue-200 font-medium"
                 >+ Add Item</button>
               </td>
             </tr>
           )}
         </tbody>
       </table>
-      <div className="flex flex-col items-end space-y-1 text-sm">
-        <div className="flex gap-8"><span>Subtotal</span><span className="tabular-nums">{subtotal.toFixed(2)}</span></div>
-        <div className="flex gap-8 items-center">
-          <span>Tax ({taxRate}%)</span>
-          {isEditing ? (
-            <input
-              type="number"
-              className="w-20 bg-transparent outline-none text-right"
-              defaultValue={taxRate}
-              onChange={(e)=> debouncedTax(Number(e.target.value)||0)}
-            />
-          ) : <span className="tabular-nums">{tax.toFixed(2)}</span>}
+      <div className="flex flex-col items-end space-y-3 text-sm border-t border-gray-200 pt-4">
+        <div className="flex gap-12 items-center">
+          <span className="text-gray-600 font-medium">Subtotal</span>
+          <span className="tabular-nums font-medium text-gray-800">{currency} {subtotal.toFixed(2)}</span>
         </div>
-        <div className="flex gap-8 font-semibold"><span>Total</span><span className="tabular-nums">{total.toFixed(2)} {currency}</span></div>
+        <div className="flex gap-12 items-center">
+          <span className="text-gray-600 font-medium">Tax</span>
+          <div className="flex items-center gap-2">
+            {isEditing ? (
+              <input
+                type="number"
+                className="w-16 bg-transparent outline-none text-right text-sm focus:bg-gray-50 rounded px-2 py-1 border border-transparent focus:border-gray-300 tabular-nums"
+                defaultValue={taxRate}
+                onChange={(e)=> debouncedTax(Number(e.target.value)||0)}
+                min="0"
+                max="100"
+                step="0.1"
+              />
+            ) : (
+              <span className="text-sm text-gray-600">({taxRate}%)</span>
+            )}
+            <span className="tabular-nums font-medium text-gray-800">{currency} {tax.toFixed(2)}</span>
+          </div>
+        </div>
+        <div className="flex gap-12 items-center border-t border-gray-300 pt-3">
+          <span className="text-lg font-semibold text-gray-900">Total</span>
+          <span className="text-lg font-bold tabular-nums text-gray-900">{currency} {total.toFixed(2)}</span>
+        </div>
       </div>
-      <div>
-        <label className="block text-xs uppercase tracking-wide text-neutral-500 mb-1">Notes</label>
+      <div className="border-t border-gray-100 pt-6">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Notes</label>
         {isEditing ? (
           <textarea
-            className="w-full min-h-20 bg-neutral-50 border rounded p-2 text-sm"
+            className="w-full min-h-[80px] p-3 text-sm leading-relaxed bg-gray-50 border border-gray-200 rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white"
             defaultValue={notes || ""}
             onChange={(e)=> debouncedNotes(e.target.value)}
+            placeholder="Add any additional notes or terms..."
           />
         ) : (
-          <p className="text-sm whitespace-pre-wrap">{notes}</p>
+          <div className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700 min-h-[40px]">
+            {notes || "No additional notes"}
+          </div>
         )}
       </div>
     </div>

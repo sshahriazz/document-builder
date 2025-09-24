@@ -56,7 +56,7 @@ export default function Dark() {
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
-      className="headerPreview w-[90%] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
+      className="headerPreview w-[210mm] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
     >
       {isEditing && (
         <div

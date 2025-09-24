@@ -38,7 +38,7 @@ export default function DocumentCreator() {
   }, [headerData, styleData, order, byId]);
   
   return (
-    <main className="min-h-screen flex flex-row bg-neutral-200/60">
+    <main className="min-h-screen flex flex-row">
       <div className="flex-1 w-full p-10 space-y-10 max-h-screen overflow-y-auto">
         <RenderHeader />
         <DocumentProvider seed>

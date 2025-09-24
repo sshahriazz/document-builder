@@ -7,6 +7,9 @@ import { From } from "@/components/header-blocks/From";
 import { To } from "@/components/header-blocks/To";
 import { Dates } from "@/components/header-blocks/Dates";
 import { useUI } from "@/app/store/ui";
+import { HugeiconsIcon } from "@hugeicons/react"
+import { MultiplicationSignCircleFreeIcons, PlusSignIcon } from "@hugeicons/core-free-icons";
+
 
 export default function Pastel() {
   const { data, clearBackground, setBackgroundImage } = useHeaderStyle();
@@ -47,7 +50,7 @@ export default function Pastel() {
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
-      className="headerPreview w-[90%] relative mx-auto my-10 bg-no-repeat bg-center bg-[length:100%_auto] border border-neutral-300 min-h-[500px]"
+      className="w-[59.5rem] h-[calc(84.2rem/2)] relative mx-auto bg-no-repeat bg-center bg-[length:100%_100%]"
     >
       {isEditing && (
         <div
@@ -55,43 +58,63 @@ export default function Pastel() {
           className="absolute top-4 right-4 z-10 flex items-center gap-3 text-sm"
         >
           {data.backgroundImage === null && (
-            <Button onPress={handleFileUpload}>Add Bg</Button>
+            <Button size="sm" isIconOnly onPress={handleFileUpload}><HugeiconsIcon
+              icon={PlusSignIcon}
+              size={24}
+              color="currentColor"
+              strokeWidth={1.5}
+            /></Button>
           )}
           {data.backgroundImage !== null && (
-            <Button onPress={handleFileChange}>Edit</Button>
+            <Button size="sm" isIconOnly onPress={handleFileChange}><HugeiconsIcon
+              icon={PlusSignIcon}
+              size={24}
+              color="currentColor"
+              strokeWidth={1.5}
+            /></Button>
           )}
           {data.backgroundImage !== null && (
-            <Button onPress={handleFileRemove}>x</Button>
+            <Button size="sm" isIconOnly onPress={handleFileRemove}><HugeiconsIcon
+              icon={MultiplicationSignCircleFreeIcons}
+              size={24}
+              color="currentColor"
+              strokeWidth={1.5}
+            /></Button>
           )}
         </div>
       )}
       {/* Example title/text preview area */}
       <Card
+      radius="none"
+      shadow="none"
         style={{
           backgroundColor: data.backgroundColor,
           color: data.textColor,
+
         }}
-        className="w-[70%] mx-auto mt-20 shadow-none"
+        className="w-[70%] mx-auto top-20"
       >
-        <CardBody>
-          <div className="title text-4xl font-semibold tracking-tight sm:text-[44px]">
+        <CardBody className="p-8 sm:p-12">
+          <div className="title text-4xl sm:text-5xl font-bold leading-tight tracking-tight mb-3">
             <Title />
           </div>
-          <Dates />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="space-y-2">
-              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+          <div className="mb-10">
+            <Dates />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-widest opacity-60">
                 From
               </div>
-              <div className="text-gray-800">
+              <div className="text-base font-medium leading-relaxed">
                 <From />
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="text-xs font-medium uppercase tracking-wider text-gray-400">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-widest opacity-60">
                 To
               </div>
-              <div className="text-gray-800">
+              <div className="text-base font-medium leading-relaxed">
                 <To />
               </div>
             </div>

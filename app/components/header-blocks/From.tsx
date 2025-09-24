@@ -14,18 +14,21 @@ export function From({ labelledById }: { labelledById?: string }) {
   const from = data.from;
 
   return (
-    <div aria-labelledby={labelledById}>
+    <div aria-labelledby={labelledById} className="space-y-1">
       <EditableText
         style={{
           color: styleData.textColor,
         }}
+        className="text-lg font-semibold leading-tight"
         value={from.name}
         onChange={(v) => setPartyField("from", "name", v)}
         editable={isEditing}
         ariaLabel="Sender name"
       />
-      <Emails who="from" showAdd={false} />
-      <Addresses who="from" showAdd={false} />
+      <div className="space-y-0.5">
+        <Emails who="from" showAdd={isEditing} />
+        <Addresses who="from" showAdd={isEditing} />
+      </div>
     </div>
   );
 }

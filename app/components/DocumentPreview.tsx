@@ -34,7 +34,7 @@ export default function DocumentPreview() {
   }, [order, byId]);
 
   return (
-    <main className="min-h-screen flex flex-row bg-neutral-100">
+    <main className="min-h-screen flex flex-row">
       <div className="flex-1 w-full p-10 space-y-10">
         <RenderHeader />
         {!hydrated && <div className="text-sm text-neutral-500">Loading saved document...</div>}

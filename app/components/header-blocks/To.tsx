@@ -13,18 +13,21 @@ export function To({ labelledById }: { labelledById?: string }) {
   const { isEditing } = useUI();
   const to = data.to;
   return (
-    <div aria-labelledby={labelledById}>
+    <div aria-labelledby={labelledById} className="space-y-1">
       <EditableText
         style={{
           color: styleData.textColor,
         }}
+        className="text-lg font-semibold leading-tight"
         value={to.name}
         onChange={(v) => setPartyField("to", "name", v)}
         editable={isEditing}
         ariaLabel="Recipient name"
       />
-      <Emails who="to" showAdd={isEditing} />
-      <Addresses who="to" showAdd={isEditing} />
+      <div className="space-y-0.5">
+        <Emails who="to" showAdd={isEditing} />
+        <Addresses who="to" showAdd={isEditing} />
+      </div>
     </div>
   );
 }

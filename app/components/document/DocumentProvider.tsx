@@ -10,5 +10,5 @@ export function DocumentProvider({ seed, children }: { seed?: boolean; children:
   useEffect(() => {
     if (seed) seedDocumentBlocks();
   }, [seed]);
-  return <div className="w-[90%] mx-auto">{children}</div>;
+  return <div className="w-[210mm] mx-auto">{children}</div>;
 }
