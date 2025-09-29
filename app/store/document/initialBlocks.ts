@@ -3,6 +3,7 @@
 
 import { AnyDocumentBlock } from "./documentBlocks";
 import { useDocumentBlocksStore } from "./documentBlocksStore";
+import { useDocumentConfig } from "./documentConfig";
 
 /**
  * Three starter blocks (one per block type) with stable UUIDs.
@@ -19,28 +20,12 @@ export const initialDocumentBlocks: AnyDocumentBlock[] = [
     style: { fontSize: 18, marginBottom: 16 }
   },
   {
-    uuid: "blk_invoice_summary",
-    type: "invoice-summary",
-    content: {
-      items: [
-        { id: "it_design", description: "Design Phase", quantity: 8, unitPrice: 90 },
-        { id: "it_dev", description: "Development", quantity: 24, unitPrice: 110 },
-        { id: "it_review", description: "Review & QA", quantity: 6, unitPrice: 85 }
-      ],
-      taxRate: 8.5,
-      currency: "USD",
-      notes: "Payment due NET 15."
-    },
-    position: 1,
-    style: { compact: false, marginTop: 20, marginBottom: 24 }
-  },
-  {
     uuid: "blk_text_notes",
     type: "text-area",
     content: {
       text: "Internal notes: refine messaging before sending to client."
     },
-    position: 2,
+    position: 1, // will be shifted to 2 when fee-summary is inserted during seeding
     style: { monospace: true, marginTop: 12 }
   }
 ];
@@ -52,7 +37,53 @@ export const initialDocumentBlocks: AnyDocumentBlock[] = [
 export function seedDocumentBlocks(force = false) {
   const state = useDocumentBlocksStore.getState();
   if (!force && state.order.length > 0) return; // avoid overwriting existing user data unless forced
-  state.replaceAll(initialDocumentBlocks);
+  // Build fee-summary using current document config for currency and default structure
+  const cfg = useDocumentConfig.getState();
+  const feeBlock: AnyDocumentBlock = {
+    uuid: "blk_fee_summary",
+    type: "fee-summary",
+    content: {
+      structure: cfg.defaultStructure,
+      currency: cfg.currency,
+      taxRate: 0,
+      options: [
+        {
+          id: "opt_starter",
+          title: "Starter Package",
+          description: "Basic deliverables suitable for small engagements.",
+          items: [{ id: "it_one_time", name: "One-time Fee", qty: 1, unitPrice: 2500 }],
+          taxRate: 0,
+          currency: cfg.currency,
+          selected: cfg.defaultStructure === 'packages' ? false : undefined,
+        },
+        {
+          id: "opt_six_month",
+          title: "6-Month Package",
+          description: "Monthly retainer over 6 months for the agreed-upon services.",
+          items: [{ id: "it_monthly_6", name: "Monthly Fee", qty: 6, unitPrice: 2000 }],
+          taxRate: 0,
+          currency: cfg.currency,
+          selected: cfg.defaultStructure === 'packages',
+        },
+        {
+          id: "opt_premium",
+          title: "Premium Package",
+          description: "Expanded scope, priority support, and additional reviews.",
+          items: [{ id: "it_monthly_6_p", name: "Monthly Fee", qty: 6, unitPrice: 3000 }],
+          taxRate: 0,
+          currency: cfg.currency,
+          selected: cfg.defaultStructure === 'packages' ? false : undefined,
+        }
+      ]
+    } as any,
+    position: 1,
+    style: { marginTop: 20, marginBottom: 24 }
+  };
+
+  const base = initialDocumentBlocks;
+  const textBlock = { ...base[1], position: 2 } as AnyDocumentBlock;
+  const blocks: AnyDocumentBlock[] = [base[0], feeBlock, textBlock];
+  state.replaceAll(blocks);
 }
 
 /**

@@ -6,7 +6,7 @@ import { useHeaderContent } from "@/app/store/header/headerContent";
 import { useHeaderStyle } from "@/app/store/themeStyle";
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
 import { BlockWrapper } from "./document/BlockWrapper";
-import { renderBlockComponent } from "./document/blocks";
+import { renderBlockComponent } from "./document/blocks/blocks";
 import type { AnyDocumentBlock } from "@/app/store/document/documentBlocks";
 import { initUI } from "../store/ui";
 initUI({isEditing: false});

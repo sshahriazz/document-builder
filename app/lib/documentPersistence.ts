@@ -5,6 +5,7 @@ export interface DocumentSnapshot {
   headerData: HeaderData;
   headerStyle: Record<string, any>; // keep flexible for now
   documentBlocks: AnyDocumentBlock[];
+  documentConfig?: Record<string, any>;
   savedAt: string; // ISO timestamp
   version: number;
 }

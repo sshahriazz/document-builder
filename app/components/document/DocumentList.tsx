@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
-import { renderBlockComponent } from "./blocks";
+import { renderBlockComponent } from "./blocks/blocks";
 import { BlockWrapper } from "./BlockWrapper";
 import { useMemo } from "react";
 import type { AnyDocumentBlock } from "@/app/store/document/documentBlocks";

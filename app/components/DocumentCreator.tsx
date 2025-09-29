@@ -8,12 +8,14 @@ import { useHeaderContent } from "../store/header/headerContent";
 import { useHeaderStyle } from "../store/themeStyle";
 import { useDocumentBlocksStore } from "../store/document/documentBlocksStore";
 import { saveSnapshot } from "@/app/lib/documentPersistence";
+import { useDocumentConfig } from "@/app/store/document/documentConfig";
 
 
 
 export default function DocumentCreator() {
   const {data: headerData} = useHeaderContent();
   const { data: styleData } = useHeaderStyle();
+  const docConfig = useDocumentConfig();
   // Select raw primitives for stable derivation
   const order = useDocumentBlocksStore(s => s.order);
   const byId = useDocumentBlocksStore(s => s.byId);
@@ -28,14 +30,15 @@ export default function DocumentCreator() {
     const snapshot = {
       headerData: headerData,
       headerStyle: styleData,
-      documentBlocks: blocks
+      documentBlocks: blocks,
+      documentConfig: docConfig
     };
     setDocument(snapshot);
     // persist
     if (typeof window !== 'undefined') {
       saveSnapshot(snapshot as any);
     }
-  }, [headerData, styleData, order, byId]);
+  }, [headerData, styleData, order, byId, docConfig]);
   
   return (
     <main className="min-h-screen flex flex-row">

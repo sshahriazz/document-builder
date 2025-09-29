@@ -39,7 +39,7 @@ The app uses a normalized store (Zustand + Immer + Persist) for dynamic document
 interface DocumentBlockEntity {
 	id: string;            // UUID-like internal id
 	key: string;           // React key: `${type}-${id}`
-	type: string;          // Discriminant (e.g. 'rich-text', 'invoice-summary')
+	type: string;          // Discriminant (e.g. 'rich-text', 'fee-summary')
 	name: string;          // Human label shown in UI
 	position: number;      // Derived ordering index
 	styles: BlockStyles;   // Presentational style surface (extensible)
@@ -51,14 +51,15 @@ interface RichTextContent {
 	html: string;
 }
 
-interface InvoiceSummaryContent {
-	kind: 'invoice-summary';
+interface FeeSummaryContent {
+	kind: 'fee-summary';
 	currency: string;
 	taxRate: number;
 	items: { id: string; description: string; quantity: number; unitPrice: number }[];
 	notes?: string;
 }
 ```
+// InvoiceSummary removed from the project. FeeSummary is the supported pricing block.
 
 ### Store Shape
 

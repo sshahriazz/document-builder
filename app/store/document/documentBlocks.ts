@@ -1,27 +1,40 @@
 // Types only module for document block definitions
+import type { CurrencyCode } from "@/app/types/currency";
 
 // Core discriminant
-export type BlockType = "rich-text" | "text-area" | "invoice-summary";
+export type BlockType = "rich-text" | "text-area" | "fee-summary";
 
 // Content per type
 export interface RichTextContent { html: string }
 export interface TextAreaContent { text: string }
-export interface InvoiceItem {
+// ----- Fee Summary (Packages / Multi-select) -----
+export type FeeStructure = 'single' | 'packages' | 'multi-select';
+export interface FeeLineItem {
   id: string;
-  description: string;
-  quantity: number;
+  name: string;
+  description?: string;
+  qty: number;
   unitPrice: number;
 }
-export interface InvoiceSummaryContent {
-  items: InvoiceItem[];
-  taxRate: number;
-  currency: string;
-  notes?: string;
+export interface FeeOption {
+  id: string;
+  title: string;
+  description?: string;
+  items: FeeLineItem[];
+  taxRate: number;   // percent
+  currency: CurrencyCode;
+  selected?: boolean; // relevant for packages/multi-select
+}
+export interface FeeSummaryContent {
+  structure: FeeStructure;
+  options: FeeOption[];
+  currency: CurrencyCode; // default/inherited
+  taxRate: number;  // default/inherited
 }
 export type BlockContentMap = {
   "rich-text": RichTextContent;
   "text-area": TextAreaContent;
-  "invoice-summary": InvoiceSummaryContent;
+  "fee-summary": FeeSummaryContent;
 };
 export type AnyBlockContent = BlockContentMap[BlockType];
 
@@ -29,11 +42,10 @@ export type AnyBlockContent = BlockContentMap[BlockType];
 export interface BaseStyle { marginTop?: number; marginBottom?: number }
 export interface RichTextStyle extends BaseStyle { fontSize?: number }
 export interface TextAreaStyle extends BaseStyle { monospace?: boolean }
-export interface InvoiceSummaryStyle extends BaseStyle { compact?: boolean }
 export type BlockStyleMap = {
   "rich-text": RichTextStyle;
   "text-area": TextAreaStyle;
-  "invoice-summary": InvoiceSummaryStyle;
+  "fee-summary": BaseStyle;
 };
 export type AnyBlockStyle = BlockStyleMap[BlockType];
 

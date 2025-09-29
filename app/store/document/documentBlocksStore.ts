@@ -35,6 +35,11 @@ interface BlocksActions {
     addBlock: <T extends BlockType>(data: NewBlockInput<T>, index?: number) => string;
     insertAfter: (targetUuid: string | null, data: NewBlockInput<BlockType>) => string; // null = prepend
     updateContent: <T extends BlockType>(uuid: string, updater: (prev: BlockContentMap[T]) => BlockContentMap[T]) => void;
+    /**
+     * mutateContent: run an immer-powered mutator against a block's content in-place.
+     * Prefer this for deep, localized updates to avoid cloning large objects in components.
+     */
+    mutateContent: <T extends BlockType>(uuid: string, mutator: (draft: BlockContentMap[T]) => void) => void;
     patchContent: (uuid: string, partial: Partial<BlockContentMap[BlockType]>) => void; // lenient patch across kinds
     updateStyle: <T extends BlockType>(uuid: string, partial: Partial<BlockStyleMap[T]>) => void;
     moveBlock: (uuid: string, toIndex: number) => void;
@@ -92,6 +97,13 @@ export const useDocumentBlocksStore = create<DocumentBlocksStore>()(
                 const ent = draft.byId[uuid];
                 if (!ent) return;
                 ent.content = updater(ent.content as any);
+            });
+        },
+        mutateContent: (uuid, mutator) => {
+            set((draft) => {
+                const ent = draft.byId[uuid];
+                if (!ent) return;
+                mutator(ent.content as any);
             });
         },
         patchContent: (uuid, partial) => {
