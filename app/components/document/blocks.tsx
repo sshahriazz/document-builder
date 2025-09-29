@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
 import TiptapEditor from "@/app/components/editor/TipTap";
+import Toolbar from "@/app/components/editor/Toolbar";
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
 import { useUI } from "@/app/store/ui";
 import { isBlockOfType } from "@/app/store/document/documentBlocksStore";
 import type { AnyDocumentBlock } from "@/app/store/document/documentBlocks";
 import { debounce } from "@/app/lib/debounce";
+import BubbleMenu from "../editor/BubbleMenu";
+import FloatingMenu from "../editor/FloatingMenu";
 
 // --- Rich Text Block ---
 export function RichTextBlock({ block }: { block: Extract<AnyDocumentBlock,{type:"rich-text"}> }) {
@@ -20,7 +23,17 @@ export function RichTextBlock({ block }: { block: Extract<AnyDocumentBlock,{type
         editable={isEditing}
         initialContent={block.content.html}
         onUpdateHtml={debounced}
-      />
+      >
+        {(editor) => (
+          isEditing ? (
+            <div className="mb-2">
+              <Toolbar editor={editor} />
+              <BubbleMenu editor={editor}  />
+              <FloatingMenu editor={editor}  />
+            </div>
+          ) : null
+        )}
+      </TiptapEditor>
     </div>
   );
 }

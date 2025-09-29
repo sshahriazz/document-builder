@@ -17,6 +17,12 @@ importers:
       '@hugeicons/react':
         specifier: ^1.1.1
         version: 1.1.1(react@19.1.0)
+      '@tiptap/extension-highlight':
+        specifier: ^3.4.2
+        version: 3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))
+      '@tiptap/extension-text-align':
+        specifier: ^3.4.2
+        version: 3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))
       '@tiptap/pm':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1618,6 +1624,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.4.2
 
+  '@tiptap/extension-highlight@3.4.2':
+    resolution: {integrity: sha512-jLPTmTuMQTP4nhCWG9XL1QKoOv8a7XG6NrqtBO/8+wHPGrl+C9Qb+QxrJrbrpsC7IadNVccp6hF4qAGAaVLtQg==}
+    peerDependencies:
+      '@tiptap/core': ^3.4.2
+
   '@tiptap/extension-horizontal-rule@3.4.2':
     resolution: {integrity: sha512-LK56R4ZR/B6nMxdyiDWuV6nk5akX8/2OXp29ZuX34BBYkFNjLBF9evGCHDy60az43JrSi/wwTUDafAxdO9S2Ig==}
     peerDependencies:
@@ -1663,6 +1674,11 @@ packages:
 
   '@tiptap/extension-strike@3.4.2':
     resolution: {integrity: sha512-bgdq2eW5omli+rv6PHErDME1YocT1BHkiWvRV5pRYyTz5TZTgYujA0Qn2DjsW1baFike0oG3ToLAxH5RnViDoQ==}
+    peerDependencies:
+      '@tiptap/core': ^3.4.2
+
+  '@tiptap/extension-text-align@3.4.2':
+    resolution: {integrity: sha512-PAZPwYTaH/BYvVHmK+53VvYIGV5JzmQyycYdy5JHc8EiczBBJ88HtG/hH8ZViRAXsiONld3ANF8HWyvgMSyILw==}
     peerDependencies:
       '@tiptap/core': ^3.4.2
 
@@ -5655,6 +5671,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
 
+  '@tiptap/extension-highlight@3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))':
+    dependencies:
+      '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
+
   '@tiptap/extension-horizontal-rule@3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))(@tiptap/pm@3.4.2)':
     dependencies:
       '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
@@ -5692,6 +5712,10 @@ snapshots:
       '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
 
   '@tiptap/extension-strike@3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))':
+    dependencies:
+      '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
+
+  '@tiptap/extension-text-align@3.4.2(@tiptap/core@3.4.2(@tiptap/pm@3.4.2))':
     dependencies:
       '@tiptap/core': 3.4.2(@tiptap/pm@3.4.2)
 
