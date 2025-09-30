@@ -6,8 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
-    "bench:blocks": "ts-node scripts/benchBlocks.ts"
+    "lint": "eslint"
   },
   "dependencies": {
     "@heroui/react": "^2.8.4",

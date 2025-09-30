@@ -60,54 +60,58 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = React.memo(({ block, ch
   }, [insertIndex, addBlock, onClose]);
 
   // Simplified unified hover area that includes both detection and button
-  const HoverArea = useMemo(() => ({ 
-    position, 
-    isActive, 
-    onClick,
-    verticalOffset = 0 
-  }: {
-    position: 'top' | 'bottom';
-    isActive: boolean;
-    onClick: () => void;
-    verticalOffset?: number;
-  }) => (
-    <div
-      className={cn(
-        "absolute inset-x-0 h-[52px] z-20 transition-colors duration-200", // Larger hover area to include button space
-        position === 'top' ? 'top-2' : 'bottom-2'
-        
-      )}
-      onMouseEnter={() => setActiveZone(position)}
-      onMouseLeave={() => setActiveZone(null)}
-      // style={{
-      //   transform: `translateY(${position === 'top' ? -10 : 10}px)` // Extend beyond padding
-      // }}
-    >
-      {isActive && (
-        <div 
-          className="absolute top-2 inset-x-0 flex items-center justify-center"
-          style={{
-            top: position === 'top' ? '10px' : 'auto',
-            bottom: position === 'bottom' ? '10px' : 'auto',
-            transform: `translateY(${verticalOffset}px)`
-          }}
-        >
-          <div className="flex items-center gap-2 w-full px-4">
-            <div className="h-px bg-blue-300 flex-1" />
-            <button
-              aria-label={`Insert block ${position === 'top' ? 'above' : 'below'}`}
-              title="Add New Section"
-              onClick={onClick}
-              className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-blue-500 text-white shadow-lg ring-1 ring-blue-400/40 hover:bg-blue-600 transition-colors"
-            >
-              +
-            </button>
-            <div className="h-px bg-blue-300 flex-1" />
+  const HoverArea = useMemo(() => {
+    const Component = ({ 
+      position, 
+      isActive, 
+      onClick,
+      verticalOffset = 0 
+    }: {
+      position: 'top' | 'bottom';
+      isActive: boolean;
+      onClick: () => void;
+      verticalOffset?: number;
+    }) => (
+      <div
+        className={cn(
+          "absolute inset-x-0 h-[52px] z-20 transition-colors duration-200", // Larger hover area to include button space
+          position === 'top' ? 'top-2' : 'bottom-2'
+          
+        )}
+        onMouseEnter={() => setActiveZone(position)}
+        onMouseLeave={() => setActiveZone(null)}
+        // style={{
+        //   transform: `translateY(${position === 'top' ? -10 : 10}px)` // Extend beyond padding
+        // }}
+      >
+        {isActive && (
+          <div 
+            className="absolute top-2 inset-x-0 flex items-center justify-center"
+            style={{
+              top: position === 'top' ? '10px' : 'auto',
+              bottom: position === 'bottom' ? '10px' : 'auto',
+              transform: `translateY(${verticalOffset}px)`
+            }}
+          >
+            <div className="flex items-center gap-2 w-full px-4">
+              <div className="h-px bg-blue-300 flex-1" />
+              <button
+                aria-label={`Insert block ${position === 'top' ? 'above' : 'below'}`}
+                title="Add New Section"
+                onClick={onClick}
+                className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-blue-500 text-white shadow-lg ring-1 ring-blue-400/40 hover:bg-blue-600 transition-colors"
+              >
+                +
+              </button>
+              <div className="h-px bg-blue-300 flex-1" />
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  ), []);
+        )}
+      </div>
+    );
+    Component.displayName = 'HoverArea';
+    return Component;
+  }, []);
   
   return (
     <div ref={wrapperRef} className="group relative py-[60px] px-[60px]">
