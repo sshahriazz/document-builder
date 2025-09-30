@@ -17,9 +17,11 @@ export function DocumentList() {
     });
   }, [order, byId]);
 
-  return <div className="space-y-5">{blocks.map(b => (
-    <BlockWrapper key={b.uuid} block={b} total={blocks.length}>
-      {renderBlockComponent(b)}
-    </BlockWrapper>
+  return <div>{blocks.map((b, i) => (
+    <div key={b.uuid} className={`border-b border-l border-r border-gray-200 py-[60px] px-[60px]`}>
+      <BlockWrapper block={b} total={blocks.length}>
+        {renderBlockComponent(b)}
+      </BlockWrapper>
+    </div>
   ))}</div>;
 }

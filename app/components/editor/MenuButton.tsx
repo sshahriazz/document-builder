@@ -15,19 +15,18 @@ const MenuButton: React.FC<MenuButtonProps> = ({ icon, text, onClick, active, di
   return (
     <Tooltip content={text} placement="top">
       <Button
+        aria-label={text}
+        title={text}
         isDisabled={disabled}
         size="sm"
-        variant="light"
+        variant={active ? 'flat' : 'light'}
+        color={active ? 'primary' : 'default'}
         isIconOnly
         radius="sm"
-        className={`${active ? 'bg-blue-500 text-white' : ''} ${className ?? ''}`}
+        className={className}
         onPress={onClick}
       >
-        <HugeiconsIcon
-        icon={icon}
-        size={16}
-        strokeWidth={1.5}
-        />
+        <HugeiconsIcon icon={icon} size={16} strokeWidth={1.5} />
       </Button>
     </Tooltip>
   )

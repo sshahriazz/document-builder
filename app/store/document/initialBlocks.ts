@@ -49,8 +49,7 @@ export function seedDocumentBlocks(force = false) {
       options: [
         {
           id: "opt_starter",
-          title: "Starter Package",
-          description: "Basic deliverables suitable for small engagements.",
+          summary: "<p><strong>Starter Package</strong></p><p>Basic deliverables suitable for small engagements.</p>",
           items: [{ id: "it_one_time", name: "One-time Fee", qty: 1, unitPrice: 2500 }],
           taxRate: 0,
           currency: cfg.currency,
@@ -58,8 +57,7 @@ export function seedDocumentBlocks(force = false) {
         },
         {
           id: "opt_six_month",
-          title: "6-Month Package",
-          description: "Monthly retainer over 6 months for the agreed-upon services.",
+          summary: "<p><strong>6-Month Package</strong></p><p>Monthly retainer over 6 months for the agreed-upon services.</p>",
           items: [{ id: "it_monthly_6", name: "Monthly Fee", qty: 6, unitPrice: 2000 }],
           taxRate: 0,
           currency: cfg.currency,
@@ -67,8 +65,7 @@ export function seedDocumentBlocks(force = false) {
         },
         {
           id: "opt_premium",
-          title: "Premium Package",
-          description: "Expanded scope, priority support, and additional reviews.",
+          summary: "<p><strong>Premium Package</strong></p><p>Expanded scope, priority support, and additional reviews.</p>",
           items: [{ id: "it_monthly_6_p", name: "Monthly Fee", qty: 6, unitPrice: 3000 }],
           taxRate: 0,
           currency: cfg.currency,

@@ -3,10 +3,10 @@ import type { HeaderData } from "@/app/components/types";
 
 export interface DocumentSnapshot {
   headerData: HeaderData;
-  headerStyle: Record<string, any>; // keep flexible for now
+  headerStyle: Record<string, unknown>;
   documentBlocks: AnyDocumentBlock[];
-  documentConfig?: Record<string, any>;
-  savedAt: string; // ISO timestamp
+  documentConfig?: Record<string, unknown>;
+  savedAt: string;
   version: number;
 }
 
@@ -25,7 +25,7 @@ export function loadSnapshot(): DocumentSnapshot | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as DocumentSnapshot;
+    return JSON.parse(raw);
   } catch (e) {
     console.warn("Failed to parse snapshot", e);
     return null;

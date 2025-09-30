@@ -15,7 +15,7 @@ export default function Pastel() {
   return (
     <div
       style={{ backgroundImage: `url(${data.backgroundImage})` }}
-      className="w-[59.5rem] h-[calc(84.2rem/2)] relative mx-auto bg-no-repeat bg-center bg-[length:100%_100%]"
+      className="w-full h-[898px] relative bg-no-repeat bg-center bg-cover"
     >
       <BackgroundControls />
       {/* Example title/text preview area */}

@@ -60,7 +60,7 @@ export const useHeaderStyle = create<HeaderStyleStore>((set, get) => ({
     } as ThemeStyleData;
     set({
       themes: { ...themes, [active]: updatedTheme },
-      data: { ...data, [key]: value as any },
+      data: { ...data, [key]: value },
     });
   },
   setThemeMany: (patch) => {

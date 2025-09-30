@@ -27,9 +27,9 @@ export type HeaderContentStore = {
 };
 
 const initialParty: Party = {
-  name: "Sayed Rezwanul Karin",
-  email: ["karim@kk.com"],
-  address: ["test address", "12, road", "creating date"],
+  name: "Your Company Name",
+  email: ["contact@yourcompany.com"],
+  address: ["Your Address", "City, State", "Country"],
 };
 
 const initialData: HeaderData = {
@@ -46,60 +46,60 @@ export const useHeaderContent = create<HeaderContentStore>()(
     hydrated: false,
     set: (key, value) =>
       set((state) => {
-        (state.data as any)[key] = value as any;
+        (state.data as Record<string, unknown>)[key] = value;
       }),
     setMany: (patch) =>
       set((state) => {
-        Object.assign(state.data as any, patch as any);
+        Object.assign(state.data as Record<string, unknown>, patch as Record<string, unknown>);
       }),
     reset: () => set({ data: initialData }),
     setParty: (who, patch) =>
       set((state) => {
-        state.data[who] = { ...state.data[who], ...(patch as any) } as any;
+        state.data[who] = { ...state.data[who], ...patch };
       }),
     setPartyField: (who, key, value) =>
       set((state) => {
-        (state.data[who] as any)[key as any] = value as any;
+        (state.data[who] as Record<string, unknown>)[key] = value;
       }),
     setEmail: (who, index, value) =>
       set((state) => {
-        const emails = (state.data[who] as any).email ?? [];
+        const emails = (state.data[who] as { email?: string[] }).email ?? [];
         for (let i = emails.length; i <= index; i++) emails[i] = "";
         emails[index] = value;
-        (state.data[who] as any).email = emails;
+        (state.data[who] as { email?: string[] }).email = emails;
       }),
     addEmail: (who) =>
       set((state) => {
-        (state.data[who] as any).email = [
-          ...((state.data[who] as any).email ?? []),
+        (state.data[who] as { email?: string[] }).email = [
+          ...((state.data[who] as { email?: string[] }).email ?? []),
           "",
         ];
       }),
     removeEmail: (who, index) =>
       set((state) => {
-        (state.data[who] as any).email = (
-          (state.data[who] as any).email || []
-        ).filter((_: any, i: number) => i !== index);
+        (state.data[who] as { email?: string[] }).email = (
+          (state.data[who] as { email?: string[] }).email || []
+        ).filter((_: string, i: number) => i !== index);
       }),
     setAddressLine: (who, index, value) =>
       set((state) => {
-        const addr = (state.data[who] as any).address ?? [];
+        const addr = (state.data[who] as { address?: string[] }).address ?? [];
         for (let i = addr.length; i <= index; i++) addr[i] = "";
         addr[index] = value;
-        (state.data[who] as any).address = addr;
+        (state.data[who] as { address?: string[] }).address = addr;
       }),
     addAddressLine: (who) =>
       set((state) => {
-        (state.data[who] as any).address = [
-          ...((state.data[who] as any).address ?? []),
+        (state.data[who] as { address?: string[] }).address = [
+          ...((state.data[who] as { address?: string[] }).address ?? []),
           "",
         ];
       }),
     removeAddressLine: (who, index) =>
       set((state) => {
-        (state.data[who] as any).address = (
-          (state.data[who] as any).address || []
-        ).filter((_: any, i: number) => i !== index);
+        (state.data[who] as { address?: string[] }).address = (
+          (state.data[who] as { address?: string[] }).address || []
+        ).filter((_: string, i: number) => i !== index);
       }),
   }))
 );

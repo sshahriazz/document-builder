@@ -10,9 +10,10 @@ import FeeSummary from "./FeeSummary";
 import { debounce } from "@/app/lib/debounce";
 import BubbleMenu from "../../editor/BubbleMenu";
 import FloatingMenu from "../../editor/FloatingMenu";
+import { ErrorBoundary } from "../../ErrorBoundary";
 
 // --- Rich Text Block ---
-export function RichTextBlock({ block }: { block: Extract<AnyDocumentBlock,{type:"rich-text"}> }) {
+const RichTextBlockComponent = ({ block }: { block: Extract<AnyDocumentBlock,{type:"rich-text"}> }) => {
   const { updateContent } = useDocumentBlocksStore();
   const isEditing = useUI(s => s.isEditing);
   const debounced = React.useMemo(() => debounce((html: string) => {
@@ -20,27 +21,29 @@ export function RichTextBlock({ block }: { block: Extract<AnyDocumentBlock,{type
   }, 400), [block.uuid, updateContent]);
   return (
     <div className="prose prose-sm prose-neutral max-w-none leading-relaxed">
-      <TiptapEditor
-        editable={isEditing}
-        initialContent={block.content.html}
-        onUpdateHtml={debounced}
-      >
-        {(editor) => (
-          isEditing ? (
-            <div className="mb-2">
-              <Toolbar editor={editor} />
-              <BubbleMenu editor={editor}  />
-              <FloatingMenu editor={editor}  />
-            </div>
-          ) : null
-        )}
-      </TiptapEditor>
+      <ErrorBoundary>
+        <TiptapEditor
+          editable={isEditing}
+          initialContent={block.content.html}
+          onUpdateHtml={debounced}
+        >
+          {(editor) => (
+            isEditing ? (
+              <>
+                {/* <Toolbar editor={editor} /> */}
+                <BubbleMenu editor={editor} />
+                <FloatingMenu editor={editor} />
+              </>
+            ) : null
+          )}
+        </TiptapEditor>
+      </ErrorBoundary>
     </div>
   );
-}
-
-// --- Text Area Block ---
-export function TextAreaBlock({ block }: { block: Extract<AnyDocumentBlock,{type:"text-area"}> }) {
+};
+export const RichTextBlock = React.memo(RichTextBlockComponent);
+RichTextBlock.displayName = 'RichTextBlock';
+const TextAreaBlockComponent = ({ block }: { block: Extract<AnyDocumentBlock,{type:"text-area"}> }) => {
   const { updateContent } = useDocumentBlocksStore();
   const isEditing = useUI(s => s.isEditing);
   const debounced = React.useMemo(() => debounce((val: string) => {
@@ -50,7 +53,7 @@ export function TextAreaBlock({ block }: { block: Extract<AnyDocumentBlock,{type
     <div className="w-full">
       {isEditing ? (
         <textarea
-          className="w-full min-h-[120px] p-4 text-sm leading-relaxed bg-transparent border border-gray-200 rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full min-h-[120px] p-4 text-sm leading-relaxed bg-transparent rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-blue-500"
           defaultValue={block.content.text}
           onChange={(e) => debounced(e.target.value)}
           placeholder="Enter your text here..."
@@ -62,13 +65,14 @@ export function TextAreaBlock({ block }: { block: Extract<AnyDocumentBlock,{type
       )}
     </div>
   );
-}
+};
 
-// (Invoice Summary removed)
+export const TextAreaBlock = React.memo(TextAreaBlockComponent);
+TextAreaBlock.displayName = 'TextAreaBlock';
 
 export function renderBlockComponent(block: AnyDocumentBlock) {
   if (isBlockOfType(block, "rich-text")) return <RichTextBlock block={block} />;
   if (isBlockOfType(block, "text-area")) return <TextAreaBlock block={block} />;
-  if (isBlockOfType(block, "fee-summary")) return <FeeSummary block={block as any} />;
+  if (isBlockOfType(block, "fee-summary")) return <FeeSummary block={block} />;
   return null;
 }

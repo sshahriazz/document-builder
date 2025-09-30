@@ -1,8 +1,8 @@
-import React from 'react'
-import {FloatingMenu as EFMenu} from '@tiptap/react/menus'
-import {type Editor} from '@tiptap/react'
+import React from "react";
+import { FloatingMenu as EFMenu } from "@tiptap/react/menus";
+import { type Editor } from "@tiptap/react";
 
-import MenuButton from './MenuButton'
+import MenuButton from "./MenuButton";
 import {
   TextBoldIcon,
   TextItalicIcon,
@@ -14,17 +14,20 @@ import {
   TextAlignJustifyCenterIcon,
   TextIcon,
   TextFontIcon,
-} from '@hugeicons/core-free-icons'
+} from "@hugeicons/core-free-icons";
 
 export interface FloatingMenuProps {
   editor: Editor | null;
 }
 
 const FloatingMenu: React.FC<FloatingMenuProps> = ({ editor }) => {
-    if (!editor) return null;
+  if (!editor) return null;
   return (
-    <EFMenu editor={editor}  className="z-50">
-        <MenuButton
+    <EFMenu
+      editor={editor}
+      className="z-[9999] pointer-events-auto flex items-center gap-1 p-1 rounded-md border border-gray-200 bg-white/95 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/90"
+    >
+      <MenuButton
         text="Heading 1"
         icon={TextFontIcon}
         active={editor.isActive("heading", { level: 1 })}
@@ -49,9 +52,8 @@ const FloatingMenu: React.FC<FloatingMenuProps> = ({ editor }) => {
         onClick={() => editor.chain().focus().setParagraph().run()}
       />
 
-      <span className="mx-1 h-6 w-px bg-gray-200" />
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
 
-      {/* Marks */}
       <MenuButton
         text="Bold"
         icon={TextBoldIcon}
@@ -80,35 +82,95 @@ const FloatingMenu: React.FC<FloatingMenuProps> = ({ editor }) => {
         onClick={() => (editor as any).chain().focus().toggleHighlight().run()}
       />
 
-      <span className="mx-1 h-6 w-px bg-gray-200" />
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
 
-      {/* Alignment */}
       <MenuButton
         text="Align Left"
         icon={TextAlignLeftIcon}
         active={editor.isActive({ textAlign: "left" })}
-        onClick={() => (editor as any).chain().focus().setTextAlign("left").run()}
+        onClick={() =>
+          (editor as any).chain().focus().setTextAlign("left").run()
+        }
       />
       <MenuButton
         text="Align Center"
         icon={TextAlignCenterIcon}
         active={editor.isActive({ textAlign: "center" })}
-        onClick={() => (editor as any).chain().focus().setTextAlign("center").run()}
+        onClick={() =>
+          (editor as any).chain().focus().setTextAlign("center").run()
+        }
       />
       <MenuButton
         text="Align Right"
         icon={TextAlignRightIcon}
         active={editor.isActive({ textAlign: "right" })}
-        onClick={() => (editor as any).chain().focus().setTextAlign("right").run()}
+        onClick={() =>
+          (editor as any).chain().focus().setTextAlign("right").run()
+        }
       />
       <MenuButton
         text="Justify"
         icon={TextAlignJustifyCenterIcon}
         active={editor.isActive({ textAlign: "justify" })}
-        onClick={() => (editor as any).chain().focus().setTextAlign("justify").run()}
+        onClick={() =>
+          (editor as any).chain().focus().setTextAlign("justify").run()
+        }
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
+
+      <MenuButton
+        text="Bullet List"
+        icon={TextIcon}
+        active={editor.isActive("bulletList")}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      />
+      <MenuButton
+        text="Ordered List"
+        icon={TextIcon}
+        active={editor.isActive("orderedList")}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      />
+
+      <MenuButton
+        text="Blockquote"
+        icon={TextIcon}
+        active={editor.isActive("blockquote")}
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      />
+      <MenuButton
+        text="Code Block"
+        icon={TextIcon}
+        active={editor.isActive("codeBlock")}
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
+
+      <MenuButton
+        text="Undo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().undo().run()}
+        onClick={() => editor.chain().focus().undo().run()}
+      />
+      <MenuButton
+        text="Redo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().redo().run()}
+        onClick={() => editor.chain().focus().redo().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
+
+      <MenuButton
+        text="Clear"
+        icon={TextIcon}
+        onClick={() =>
+          editor.chain().focus().clearNodes().unsetAllMarks().run()
+        }
       />
     </EFMenu>
-  )
-}
+  );
+};
 
-export default FloatingMenu
+export default FloatingMenu;

@@ -125,6 +125,61 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, className }) => {
         active={editor.isActive({ textAlign: "justify" })}
         onClick={() => (editor as any).chain().focus().setTextAlign("justify").run()}
       />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Lists */}
+      <MenuButton
+        text="Bullet List"
+        icon={TextIcon}
+        active={editor.isActive('bulletList')}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      />
+      <MenuButton
+        text="Ordered List"
+        icon={TextIcon}
+        active={editor.isActive('orderedList')}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      />
+
+      {/* Blockquote & Code */}
+      <MenuButton
+        text="Blockquote"
+        icon={TextIcon}
+        active={editor.isActive('blockquote')}
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      />
+      <MenuButton
+        text="Code Block"
+        icon={TextIcon}
+        active={editor.isActive('codeBlock')}
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Undo/Redo */}
+      <MenuButton
+        text="Undo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().undo().run()}
+        onClick={() => editor.chain().focus().undo().run()}
+      />
+      <MenuButton
+        text="Redo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().redo().run()}
+        onClick={() => editor.chain().focus().redo().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Clear formatting */}
+      <MenuButton
+        text="Clear Formatting"
+        icon={TextIcon}
+        onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+      />
     </div>
   );
 };

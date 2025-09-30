@@ -23,7 +23,10 @@ export interface BubbleMenuProps {
 const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
     if (!editor) return null;
   return (
-    <EBMenu editor={editor}  className="z-50">
+    <EBMenu
+      editor={editor}
+      className="z-[9999] pointer-events-auto flex items-center gap-1 p-1 rounded-md border border-gray-200 bg-white/95 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/90"
+    >
         <MenuButton
         text="Heading 1"
         icon={TextFontIcon}
@@ -49,7 +52,7 @@ const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
         onClick={() => editor.chain().focus().setParagraph().run()}
       />
 
-      <span className="mx-1 h-6 w-px bg-gray-200" />
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
 
       {/* Marks */}
       <MenuButton
@@ -80,15 +83,7 @@ const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
         onClick={() => (editor as any).chain().focus().toggleHighlight().run()}
       />
 
-      <span className="mx-1 h-6 w-px bg-gray-200" />
-
-      {/* Alignment */}
-      <MenuButton
-        text="Align Left"
-        icon={TextAlignLeftIcon}
-        active={editor.isActive({ textAlign: "left" })}
-        onClick={() => (editor as any).chain().focus().setTextAlign("left").run()}
-      />
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
       <MenuButton
         text="Align Center"
         icon={TextAlignCenterIcon}
@@ -106,6 +101,61 @@ const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
         icon={TextAlignJustifyCenterIcon}
         active={editor.isActive({ textAlign: "justify" })}
         onClick={() => (editor as any).chain().focus().setTextAlign("justify").run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Lists */}
+      <MenuButton
+        text="Bullet List"
+        icon={TextIcon}
+        active={editor.isActive('bulletList')}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      />
+      <MenuButton
+        text="Ordered List"
+        icon={TextIcon}
+        active={editor.isActive('orderedList')}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      />
+
+      {/* Blockquote & Code */}
+      <MenuButton
+        text="Blockquote"
+        icon={TextIcon}
+        active={editor.isActive('blockquote')}
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      />
+      <MenuButton
+        text="Code Block"
+        icon={TextIcon}
+        active={editor.isActive('codeBlock')}
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Undo/Redo */}
+      <MenuButton
+        text="Undo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().undo().run()}
+        onClick={() => editor.chain().focus().undo().run()}
+      />
+      <MenuButton
+        text="Redo"
+        icon={TextIcon}
+        disabled={!editor.can().chain().focus().redo().run()}
+        onClick={() => editor.chain().focus().redo().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Clear formatting */}
+      <MenuButton
+        text="Clear"
+        icon={TextIcon}
+        onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
       />
     </EBMenu>
   )

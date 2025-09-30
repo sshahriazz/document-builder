@@ -16,6 +16,6 @@ let __uiInitialized = false;
 export function initUI(defaults: Partial<Pick<UIStore, "isEditing">>) {
   if (__uiInitialized) return;
   // Shallow merge only provided defaults to avoid overwriting actions
-  useUI.setState(defaults as any);
+  useUI.setState(defaults);
   __uiInitialized = true;
 }

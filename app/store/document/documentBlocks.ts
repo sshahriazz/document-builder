@@ -18,8 +18,7 @@ export interface FeeLineItem {
 }
 export interface FeeOption {
   id: string;
-  title: string;
-  description?: string;
+  summary: string; // rich HTML
   items: FeeLineItem[];
   taxRate: number;   // percent
   currency: CurrencyCode;

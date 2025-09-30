@@ -9,7 +9,7 @@ export function migrateFeeStructure(content: FeeSummaryContent, to: FeeStructure
     return { ...content, structure: 'single', options: [one] };
   }
   if (to === 'packages') {
-    let selectedFound = options.some(o => o.selected);
+    const selectedFound = options.some(o => o.selected);
     if (!selectedFound && options.length) {
       options = options.map((o, i) => ({ ...o, selected: i === 0 }));
     } else {

@@ -5,9 +5,9 @@ import { useDocumentConfig } from "./documentConfig";
 export function createBlock(type: BlockType): { type: BlockType; content: BlockContentMap[BlockType]; style?: BlockStyleMap[BlockType]; uuid: string } {
   switch (type) {
     case "rich-text":
-      return { type, uuid: nanoid(), content: { html: "<p>New rich text block</p>" } } as any;
+      return { type, uuid: nanoid(), content: { html: "<p>New rich text block</p>" } };
     case "text-area":
-      return { type, uuid: nanoid(), content: { text: "New notes" } } as any;
+      return { type, uuid: nanoid(), content: { text: "New notes" } };
     case "fee-summary":
       // Read current config synchronously from the store (safe for client-only usage)
       const cfg = useDocumentConfig.getState();
@@ -21,8 +21,7 @@ export function createBlock(type: BlockType): { type: BlockType; content: BlockC
           options: [
             {
               id: nanoid(),
-              title: 'Starter Package',
-              description: 'Basic deliverables suitable for small engagements.',
+              summary: 'Starter Package',
               items: [ { id: nanoid(), name: 'One-time Fee', qty: 1, unitPrice: 2500 } ],
               taxRate: 0,
               currency: cfg.currency,
@@ -30,8 +29,7 @@ export function createBlock(type: BlockType): { type: BlockType; content: BlockC
             },
             {
               id: nanoid(),
-              title: '6-Month Package',
-              description: 'Monthly retainer over 6 months for the agreed-upon services.',
+              summary: 'Starter Package',
               items: [ { id: nanoid(), name: 'Monthly Fee', qty: 6, unitPrice: 2000 } ],
               taxRate: 0,
               currency: cfg.currency,
@@ -39,8 +37,7 @@ export function createBlock(type: BlockType): { type: BlockType; content: BlockC
             },
             {
               id: nanoid(),
-              title: 'Premium Package',
-              description: 'Expanded scope, priority support, and additional reviews.',
+              summary: 'Premium Package',
               items: [ { id: nanoid(), name: 'Monthly Fee', qty: 6, unitPrice: 3000 } ],
               taxRate: 0,
               currency: cfg.currency,
@@ -48,10 +45,10 @@ export function createBlock(type: BlockType): { type: BlockType; content: BlockC
             }
           ]
         }
-      } as any;
+      };
     default:
       // exhaustive
-      return { type, uuid: nanoid(), content: {} as any };
+      return { type, uuid: nanoid(), content: {} as BlockContentMap[BlockType] };
   }
 }
 
