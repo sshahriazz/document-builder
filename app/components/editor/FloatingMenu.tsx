@@ -14,6 +14,7 @@ import {
   TextAlignJustifyCenterIcon,
   TextIcon,
   TextFontIcon,
+  Image01Icon,
 } from "@hugeicons/core-free-icons";
 
 export interface FloatingMenuProps {
@@ -143,6 +144,21 @@ const FloatingMenu: React.FC<FloatingMenuProps> = ({ editor }) => {
         icon={TextIcon}
         active={editor.isActive("codeBlock")}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />
+
+      {/* Image */}
+      <MenuButton
+        text="Image"
+        icon={Image01Icon}
+        active={editor.isActive("image")}
+        onClick={() => {
+          const url = window.prompt("Enter image URL:");
+          if (url) {
+            (editor as any).chain().focus().setImage({ src: url }).run();
+          }
+        }}
       />
 
       <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-zinc-700" />

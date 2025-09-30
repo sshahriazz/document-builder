@@ -17,20 +17,30 @@ import type { FeeStructure } from "@/app/store/document/documentBlocks";
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
 import { migrateFeeStructure } from "@/app/lib/feeStructure";
 import { CURRENCY_CODES } from "@/app/types/currency";
+import { debounce } from "@/app/lib/debounce";
 
 export default function DocumentControls() {
   const { data, set, applyTheme } = useHeaderStyle();
   const cfg = useDocumentConfig();
+  const [isMigrating, startTransition] = React.useTransition();
+
+  const debouncedSetUpfrontPercent = React.useMemo(
+    () => debounce((v: number) => cfg.setUpfrontPercent(v), 200),
+    [cfg]
+  );
 
   return (
     <div className="w-[400px] bg-white border border-neutral-100 px-8 overflow-y-auto max-h-screen">
       <Overview />
       {/* Proposal Settings */}
       <h1 className="py-2 text-lg font-semibold">Proposal Settings</h1>
-      <div className="space-y-3 py-2">
+      <div className="space-y-4 py-2">
         {/* Expiration Date */}
         <div className="flex items-center justify-between w-full gap-3">
-          <span className="text-sm">Expiration Date</span>
+          <div className="flex flex-col flex-1">
+            <span className="text-sm">Expiration Date</span>
+            <span className="text-xs text-neutral-500">Set when this proposal should expire.</span>
+          </div>
           <DatePicker
             aria-label="Expiration Date"
             value={cfg.expirationDate ? parseDate(cfg.expirationDate) : null}
@@ -43,10 +53,13 @@ export default function DocumentControls() {
         </div>
         {/* Document Currency */}
         <div className="flex items-center justify-between w-full gap-3">
-          <span className="text-sm">Currency</span>
+          <div className="flex flex-col flex-1">
+            <span className="text-sm">Currency</span>
+            <span className="text-xs text-neutral-500">Applies to fee summary pricing.</span>
+          </div>
           <Dropdown>
             <DropdownTrigger>
-              <Button variant="flat">{cfg.currency}</Button>
+              <Button variant="flat" aria-label={`Currency ${cfg.currency}`}>{cfg.currency}</Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Currency" onAction={(key)=> cfg.setCurrency(String(key) as any)}>
               {CURRENCY_CODES.map(code => (
@@ -57,22 +70,29 @@ export default function DocumentControls() {
         </div>
         {/* Default Fee Structure */}
         <div className="flex items-center justify-between w-full gap-3">
-          <span className="text-sm">Default Fee Structure</span>
+          <div className="flex flex-col flex-1">
+            <span className="text-sm">Default Fee Structure</span>
+            <span className="text-xs text-neutral-500">Switching will migrate existing fee blocks.</span>
+          </div>
           <Dropdown>
             <DropdownTrigger>
-              <Button variant="flat">{cfg.defaultStructure.replace('-', ' ')}</Button>
+              <Button variant="flat" disabled={isMigrating} aria-busy={isMigrating}>
+                {isMigrating ? 'Applying…' : cfg.defaultStructure.replace('-', ' ')}
+              </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Default fee structure" onAction={(key)=> {
               const to = String(key) as FeeStructure;
               cfg.setDefaultStructure(to);
-              // Migrate all existing fee-summary blocks to keep UI in sync
-              const store = useDocumentBlocksStore.getState();
-              const { order, byId, updateContent } = store;
-              order.forEach((uuid) => {
-                const ent = byId[uuid];
-                if (ent?.type === 'fee-summary') {
-                  updateContent(uuid, (prev: any) => migrateFeeStructure(prev as any, to) as any);
-                }
+              // Migrate all existing fee-summary blocks to keep UI in sync (non-blocking)
+              startTransition(() => {
+                const store = useDocumentBlocksStore.getState();
+                const { order, byId, updateContent } = store;
+                order.forEach((uuid) => {
+                  const ent = byId[uuid];
+                  if (ent?.type === 'fee-summary') {
+                    updateContent(uuid, (prev: any) => migrateFeeStructure(prev as any, to) as any);
+                  }
+                });
               });
             }}>
               <DropdownItem key="single">Single Option</DropdownItem>
@@ -83,14 +103,33 @@ export default function DocumentControls() {
         </div>
         {/* Upfront Requirement */}
         <div className="flex items-center justify-between w-full gap-3">
-          <span className="text-sm">Require Upfront</span>
-          <Button variant={cfg.requireUpfront ? 'solid' : 'flat'} onPress={()=> cfg.setRequireUpfront(!cfg.requireUpfront)}>
+          <div className="flex flex-col flex-1">
+            <span className="text-sm">Require Upfront</span>
+            <span className="text-xs text-neutral-500">Toggle to request an upfront payment.</span>
+          </div>
+          <Button
+            variant={cfg.requireUpfront ? 'solid' : 'flat'}
+            aria-pressed={cfg.requireUpfront}
+            onPress={()=> cfg.setRequireUpfront(!cfg.requireUpfront)}
+          >
             {cfg.requireUpfront ? 'On' : 'Off'}
           </Button>
         </div>
         <div className="flex items-center justify-between w-full gap-3">
-          <span className="text-sm">Upfront Percent</span>
-          <Input className="w-24" type="number" min={0} max={100} value={String(cfg.upfrontPercent)} onChange={(e)=> cfg.setUpfrontPercent(Number(e.target.value)||0)} />
+          <div className="flex flex-col flex-1">
+            <span className="text-sm">Upfront Percent</span>
+            <span className="text-xs text-neutral-500">0–100%. Only applied when upfront is required.</span>
+          </div>
+          <Input
+            aria-label="Upfront Percent"
+            className="w-24"
+            type="number"
+            min={0}
+            max={100}
+            value={String(cfg.upfrontPercent)}
+            onChange={(e)=> debouncedSetUpfrontPercent(Math.max(0, Math.min(100, Number(e.target.value)||0)))}
+            disabled={!cfg.requireUpfront}
+          />
         </div>
       </div>
       <h1 className="py-2 text-lg font-semibold">Header Style</h1>

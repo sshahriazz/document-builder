@@ -15,6 +15,7 @@ import {
   TextIcon,
   TextFontIcon,
 } from '@hugeicons/core-free-icons';
+import "./extentions/ImageExtention";
 
 export interface ToolbarProps {
   editor: Editor | null;
@@ -22,6 +23,8 @@ export interface ToolbarProps {
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ editor, className }) => {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  
   // Rerender toolbar on selection/transaction so active states update live
   const [, setVersion] = React.useState(0);
   React.useEffect(() => {
@@ -38,6 +41,31 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, className }) => {
   }, [editor]);
 
   if (!editor) return null;
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const src = event.target?.result as string;
+      if (src) {
+        editor.chain().focus().setImage({ src }).run();
+      }
+    };
+    reader.readAsDataURL(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleImageFromUrl = () => {
+    const url = prompt("Enter image URL:");
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
 
   return (
     <div className={`flex flex-wrap items-center gap-1 p-1 border border-gray-200 rounded-md bg-white ${className ?? ""}`}>
@@ -180,6 +208,35 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, className }) => {
         icon={TextIcon}
         onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
       />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Image Upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="hidden"
+      />
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+        title="Upload Image"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </button>
+      <button
+        onClick={handleImageFromUrl}
+        className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+        title="Insert Image from URL"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      </button>
     </div>
   );
 };

@@ -18,7 +18,7 @@ export function DocumentList() {
   }, [order, byId]);
 
   return <div>{blocks.map((b, i) => (
-    <div key={b.uuid} className={`border-b border-l border-r border-gray-200 py-[60px] px-[60px]`}>
+    <div key={b.uuid} className={`border-b border-l border-r border-gray-200`}>
       <BlockWrapper block={b} total={blocks.length}>
         {renderBlockComponent(b)}
       </BlockWrapper>

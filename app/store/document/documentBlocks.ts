@@ -2,11 +2,37 @@
 import type { CurrencyCode } from "@/app/types/currency";
 
 // Core discriminant
-export type BlockType = "rich-text" | "text-area" | "fee-summary";
+export type BlockType = "rich-text" | "text-area" | "fee-summary" | "scope-of-services" | "deliverables" | "terms-and-conditions" | "files-and-attachments" | "your-section";
 
 // Content per type
 export interface RichTextContent { html: string }
 export interface TextAreaContent { text: string }
+// ----- Scope of Services -----
+export interface ScopeOfServicesContent { html: string }
+// ----- Deliverables -----
+export interface DeliverablesContent { html: string }
+// ----- Terms and Conditions -----
+export interface TermsAndConditionsContent { html: string }
+// ----- Files & Attachments -----
+export type UploadStatus = 'pending' | 'uploading' | 'uploaded' | 'error';
+export interface FileAttachmentItem {
+  id: string;
+  name: string;
+  size: number; // bytes
+  type: string; // mime
+  url: string;  // object URL for now; later remote URL
+  status: UploadStatus;
+  progress?: number; // 0-100
+  createdAt?: number;
+}
+export interface FilesAndAttachmentsContent {
+  title?: string;
+  showDescription?: boolean;
+  description?: string;
+  files: FileAttachmentItem[];
+}
+// ----- Your Section -----
+export interface YourSectionContent { html: string }
 // ----- Fee Summary (Packages / Multi-select) -----
 export type FeeStructure = 'single' | 'packages' | 'multi-select';
 export interface FeeLineItem {
@@ -34,6 +60,11 @@ export type BlockContentMap = {
   "rich-text": RichTextContent;
   "text-area": TextAreaContent;
   "fee-summary": FeeSummaryContent;
+  "scope-of-services": ScopeOfServicesContent;
+  "deliverables": DeliverablesContent;
+  "terms-and-conditions": TermsAndConditionsContent;
+  "files-and-attachments": FilesAndAttachmentsContent;
+  "your-section": YourSectionContent;
 };
 export type AnyBlockContent = BlockContentMap[BlockType];
 
@@ -45,6 +76,11 @@ export type BlockStyleMap = {
   "rich-text": RichTextStyle;
   "text-area": TextAreaStyle;
   "fee-summary": BaseStyle;
+  "scope-of-services": BaseStyle;
+  "deliverables": BaseStyle;
+  "terms-and-conditions": BaseStyle;
+  "files-and-attachments": BaseStyle;
+  "your-section": BaseStyle;
 };
 export type AnyBlockStyle = BlockStyleMap[BlockType];
 

@@ -1,0 +1,64 @@
+/* Custom styles for TipTap editor - Image floating and text wrapping */
+
+/* Ensure proper text wrapping around floated images */
+.ProseMirror .image-wrapper {
+  max-width: 100%;
+  vertical-align: top;
+  line-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure floated images align properly with text */
+.ProseMirror .image-wrapper > div {
+  line-height: 0;
+  margin: 0;
+}
+
+/* When image is floated, ensure it aligns to top */
+.ProseMirror .image-wrapper[style*="float: left"],
+.ProseMirror .image-wrapper[style*="float: right"] {
+  margin-top: 0 !important;
+}
+
+.ProseMirror .image-wrapper[style*="float: left"] > div,
+.ProseMirror .image-wrapper[style*="float: right"] > div {
+  margin-top: 0 !important;
+}
+
+/* Paragraphs should not clear floats - allow text to wrap */
+.ProseMirror p {
+  overflow: visible;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Image node wrapper should allow floats to work */
+.ProseMirror .node-image {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure images don't overflow their containers */
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prevent toolbar from being cut off */
+.ProseMirror .image-wrapper {
+  position: relative;
+  min-height: 50px;
+}
+
+/* Ensure resize handles are visible */
+.ProseMirror .image-wrapper .group:hover {
+  z-index: 10;
+}
+
+/* Better selection ring for floated images */
+.ProseMirror .image-wrapper.ring-2 {
+  border-radius: 0.375rem;
+  padding: 2px;
+}

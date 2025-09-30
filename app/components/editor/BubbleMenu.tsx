@@ -14,6 +14,7 @@ import {
   TextAlignJustifyCenterIcon,
   TextIcon,
   TextFontIcon,
+  Image01Icon,
 } from '@hugeicons/core-free-icons'
 
 export interface BubbleMenuProps {
@@ -25,6 +26,28 @@ const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
   return (
     <EBMenu
       editor={editor}
+      shouldShow={({ editor, state }) => {
+        // Don't show bubble menu when image is selected
+        const { selection } = state;
+        const { $from } = selection;
+        const node = $from.node();
+        
+        // Check if current node or parent is an image
+        if (node.type.name === 'image') return false;
+        if ($from.parent.type.name === 'image') return false;
+        
+        // Check if selection contains an image
+        const hasImage = state.doc.nodesBetween(
+          selection.from,
+          selection.to,
+          (node) => {
+            if (node.type.name === 'image') return false;
+          }
+        );
+        
+        // Show for text selections
+        return !selection.empty;
+      }}
       className="z-[9999] pointer-events-auto flex items-center gap-1 p-1 rounded-md border border-gray-200 bg-white/95 shadow-xl backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/90"
     >
         <MenuButton
@@ -131,6 +154,21 @@ const BubbleMenu: React.FC<BubbleMenuProps> = ({ editor }) => {
         icon={TextIcon}
         active={editor.isActive('codeBlock')}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      />
+
+      <span className="mx-1 h-6 w-px bg-gray-200" />
+
+      {/* Image */}
+      <MenuButton
+        text="Image"
+        icon={Image01Icon}
+        active={editor.isActive('image')}
+        onClick={() => {
+          const url = window.prompt('Enter image URL:');
+          if (url) {
+            (editor as any).chain().focus().setImage({ src: url }).run();
+          }
+        }}
       />
 
       <span className="mx-1 h-6 w-px bg-gray-200" />

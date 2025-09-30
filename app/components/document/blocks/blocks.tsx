@@ -7,6 +7,11 @@ import { useUI } from "@/app/store/ui";
 import { isBlockOfType } from "@/app/store/document/documentBlocksStore";
 import type { AnyDocumentBlock } from "@/app/store/document/documentBlocks";
 import FeeSummary from "./FeeSummary";
+import ScopeOfServices from "./ScopeOfServices";
+import Deliverables from "./Deliverables";
+import TermsAndConditions from "./TermsAndConditions";
+import FilesAndAttachments from "./FilesAndAttachments";
+import YourSection from "./YourSection";
 import { debounce } from "@/app/lib/debounce";
 import BubbleMenu from "../../editor/BubbleMenu";
 import FloatingMenu from "../../editor/FloatingMenu";
@@ -20,7 +25,6 @@ const RichTextBlockComponent = ({ block }: { block: Extract<AnyDocumentBlock,{ty
     updateContent(block.uuid, () => ({ html }));
   }, 400), [block.uuid, updateContent]);
   return (
-    <div className="prose prose-sm prose-neutral max-w-none leading-relaxed">
       <ErrorBoundary>
         <TiptapEditor
           editable={isEditing}
@@ -38,7 +42,6 @@ const RichTextBlockComponent = ({ block }: { block: Extract<AnyDocumentBlock,{ty
           )}
         </TiptapEditor>
       </ErrorBoundary>
-    </div>
   );
 };
 export const RichTextBlock = React.memo(RichTextBlockComponent);
@@ -74,5 +77,10 @@ export function renderBlockComponent(block: AnyDocumentBlock) {
   if (isBlockOfType(block, "rich-text")) return <RichTextBlock block={block} />;
   if (isBlockOfType(block, "text-area")) return <TextAreaBlock block={block} />;
   if (isBlockOfType(block, "fee-summary")) return <FeeSummary block={block} />;
+  if (isBlockOfType(block, "scope-of-services")) return <ScopeOfServices block={block} />;
+  if (isBlockOfType(block, "deliverables")) return <Deliverables block={block} />;
+  if (isBlockOfType(block, "terms-and-conditions")) return <TermsAndConditions block={block} />;
+  if (isBlockOfType(block, "files-and-attachments")) return <FilesAndAttachments block={block} />;
+  if (isBlockOfType(block, "your-section")) return <YourSection block={block} />;
   return null;
 }

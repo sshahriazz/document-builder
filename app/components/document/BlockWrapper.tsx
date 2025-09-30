@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { useUI } from "@/app/store/ui";
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, cn } from "@heroui/react";
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
@@ -17,33 +17,13 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = React.memo(({ block, ch
   const isEditing = useUI(s => s.isEditing);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [insertIndex, setInsertIndex] = useState<number | null>(null);
-  const [topActive, setTopActive] = useState(false);
-  const [bottomActive, setBottomActive] = useState(false);
-  const addHoverActive = topActive || bottomActive;
+  const [activeZone, setActiveZone] = useState<'top' | 'bottom' | null>(null);
+  // Constants for better maintainability
+  const PADDING_SIZE = 60;
+  const CONTROL_RAIL_OFFSET = 64;
+  
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [gutters, setGutters] = useState<{left:number; right:number}>({ left: 0, right: 0 });
-  const [rect, setRect] = useState<{ top: number; bottom: number; left: number; width: number } | null>(null);
-
-  useEffect(() => {
-    const update = () => {
-      const w = wrapperRef.current;
-      const c = contentRef.current;
-      if (!w || !c) return;
-      const wb = w.getBoundingClientRect();
-      const cb = c.getBoundingClientRect();
-      const left = Math.max(0, cb.left - wb.left);
-      const right = Math.max(0, wb.right - cb.right);
-      setGutters({ left, right });
-      setRect({ top: wb.top, bottom: wb.bottom, left: wb.left, width: wb.width });
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    if (wrapperRef.current) ro.observe(wrapperRef.current);
-    if (contentRef.current) ro.observe(contentRef.current);
-    window.addEventListener('resize', update);
-    return () => { ro.disconnect(); window.removeEventListener('resize', update); };
-  }, []);
 
   const handleMoveUp = useCallback(() => {
     if (block.position <= 0) return;
@@ -59,116 +39,137 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = React.memo(({ block, ch
     removeBlock(block.uuid);
   }, [block.uuid, removeBlock]);
 
-  const openInsertModalAt = (position: number) => {
+  const openInsertModalAt = useCallback((position: number) => {
     setInsertIndex(position);
     onOpen();
-  };
+  }, [onOpen]);
 
-  const performInsert = (type: BlockType) => {
+  const handleSectionActions = useCallback(() => {
+    // TODO: Implement section actions menu
+    console.log('Section actions clicked');
+  }, []);
+
+  const performInsert = useCallback((type: BlockType) => {
     if (insertIndex == null) return;
     const newBlock = createBlock(type);
     addBlock(newBlock, insertIndex);
     onClose();
     setInsertIndex(null);
-  };
+    setActiveZone(null); // Clear active zone after insert
+  }, [insertIndex, addBlock, onClose]);
+
+  // Simplified unified hover area that includes both detection and button
+  const HoverArea = useMemo(() => ({ 
+    position, 
+    isActive, 
+    onClick,
+    verticalOffset = 0 
+  }: {
+    position: 'top' | 'bottom';
+    isActive: boolean;
+    onClick: () => void;
+    verticalOffset?: number;
+  }) => (
+    <div
+      className={cn(
+        "absolute inset-x-0 h-[52px] z-20 transition-colors duration-200", // Larger hover area to include button space
+        position === 'top' ? 'top-2' : 'bottom-2'
+        
+      )}
+      onMouseEnter={() => setActiveZone(position)}
+      onMouseLeave={() => setActiveZone(null)}
+      // style={{
+      //   transform: `translateY(${position === 'top' ? -10 : 10}px)` // Extend beyond padding
+      // }}
+    >
+      {isActive && (
+        <div 
+          className="absolute top-2 inset-x-0 flex items-center justify-center"
+          style={{
+            top: position === 'top' ? '10px' : 'auto',
+            bottom: position === 'bottom' ? '10px' : 'auto',
+            transform: `translateY(${verticalOffset}px)`
+          }}
+        >
+          <div className="flex items-center gap-2 w-full px-4">
+            <div className="h-px bg-blue-300 flex-1" />
+            <button
+              aria-label={`Insert block ${position === 'top' ? 'above' : 'below'}`}
+              title="Add New Section"
+              onClick={onClick}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-blue-500 text-white shadow-lg ring-1 ring-blue-400/40 hover:bg-blue-600 transition-colors"
+            >
+              +
+            </button>
+            <div className="h-px bg-blue-300 flex-1" />
+          </div>
+        </div>
+      )}
+    </div>
+  ), []);
   
   return (
-    <div ref={wrapperRef} className="group relative z-0 overflow-visible">
+    <div ref={wrapperRef} className="group relative py-[60px] px-[60px]">
       {isEditing && (
         <>
-          {/* Hover trigger zones (outside the block). These do not render UI themselves but control visibility via peer-hover. */}
-          <div
-            className={cn(
-              "peer absolute left-0 right-0 -top-[60px] h-[60px] z-10"
-            )}
-            aria-hidden
-            onMouseEnter={() => setTopActive(true)}
-            onMouseLeave={() => setTopActive(false)}
+          {/* 
+            SIMPLIFIED HOVER ARCHITECTURE:
+            Single unified hover areas that include both detection and button rendering
+            No complex state management, debouncing, or z-index conflicts
+          */}
+          
+          {/* Unified hover areas - detection + button in one component */}
+          <HoverArea
+            position="top"
+            isActive={activeZone === 'top'}
+            onClick={() => openInsertModalAt(block.position)}
+            verticalOffset={-34.5} // Fine-tune button position
           />
-          <div
-            className={cn(
-              "peer/btn-b absolute left-0 right-0 -bottom-[60px] h-[60px] z-10"
-            )}
-            aria-hidden
-            onMouseEnter={() => setBottomActive(true)}
-            onMouseLeave={() => setBottomActive(false)}
+          <HoverArea
+            position="bottom"
+            isActive={activeZone === 'bottom'}
+            onClick={() => openInsertModalAt(block.position + 1)}
+            verticalOffset={34.5} // Fine-tune button position
           />
 
-          {/* In-wrapper overlays, positioned at block boundaries and separate from trigger strips */}
-          {topActive && (
-            <div
-              className={cn("absolute top-0 left-0 right-0 z-[9998] transition", topActive ? "opacity-100" : "opacity-0")}
-              onMouseEnter={() => setTopActive(true)}
-              onMouseLeave={() => setTopActive(false)}
-            >
-              <div
-                className="absolute flex items-center gap-2"
-                style={{ left: 0, right: 0, top: 0, transform: "translateY(calc(-240% + 0.3px))" }}
-              >
-                <div className="h-px bg-blue-300 flex-1" />
-                <button
-                  aria-label="Insert block above"
-                  title="Add New Section"
-                  onClick={() => openInsertModalAt(block.position)}
-                  className="pointer-events-auto inline-flex items-center justify-center w-8 h-8 rounded-md bg-blue-500 text-white shadow-lg ring-1 ring-blue-400/40 hover:bg-blue-600"
-                >
-                  +
-                </button>
-                <div className="h-px bg-blue-300 flex-1" />
-              </div>
-            </div>
-          )}
-
-          {bottomActive && (
-            <div
-              className={cn("absolute bottom-0 left-0 right-0 z-[9998] transition", bottomActive ? "opacity-100" : "opacity-0")}
-              onMouseEnter={() => setBottomActive(true)}
-              onMouseLeave={() => setBottomActive(false)}
-            >
-              <div
-                className="absolute flex items-center gap-2"
-                style={{ left: 0, right: 0, bottom: 0, transform: "translateY(calc(240% - 0.3px))" }}
-              >
-                <div className="h-px bg-blue-300 flex-1" />
-                <button
-                  aria-label="Insert block below"
-                  title="Add New Section"
-                  onClick={() => openInsertModalAt(block.position + 1)}
-                  className="pointer-events-auto inline-flex items-center justify-center w-8 h-8 rounded-md bg-blue-500 text-white shadow-lg ring-1 ring-blue-400/40 hover:bg-blue-600"
-                >
-                  +
-                </button>
-                <div className="h-px bg-blue-300 flex-1" />
-              </div>
-            </div>
-          )}
-
-          {/* Right control rail: outside, shows on any hover over wrapper */}
+          {/* Right control rail - positioned outside the padding area */}
           <div
             className={cn(
-              "pointer-events-none absolute top-1/2 -right-20 -translate-y-1/2 transition z-30 opacity-0",
-              !addHoverActive && "group-hover:opacity-100"
+              "absolute top-1/2 -translate-y-1/2 -right-16 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-40",
+              activeZone && "opacity-50 pointer-events-none"
             )}
           >
-            <div
-              className={cn(
-                "pointer-events-auto flex flex-col items-center gap-2 rounded-xl border bg-white shadow-xl p-2",
-                addHoverActive ? "pointer-events-none opacity-50" : "border-neutral-200"
-              )}
-            >
-              <button aria-label="Section actions" className="w-7 h-7 rounded-md bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700">⋮</button>
-              <button aria-label="Move up" onClick={handleMoveUp} disabled={block.position === 0}
-                className="w-7 h-7 rounded-md bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 disabled:opacity-40">▲</button>
-              <button aria-label="Move down" onClick={handleMoveDown} disabled={block.position === total - 1}
-                className="w-7 h-7 rounded-md bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 disabled:opacity-40">▼</button>
-              <button aria-label="Delete section" onClick={handleDelete}
-                className="w-7 h-7 rounded-md bg-white hover:bg-red-50 border border-neutral-200 text-red-600">🗑</button>
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white shadow-xl p-2">
+
+              <button 
+                aria-label="Move up" 
+                onClick={handleMoveUp} 
+                disabled={block.position === 0}
+                className="w-7 h-7 rounded-md bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 disabled:opacity-40 transition-colors"
+              >
+                ▲
+              </button>
+              <button 
+                aria-label="Move down" 
+                onClick={handleMoveDown} 
+                disabled={block.position === total - 1}
+                className="w-7 h-7 rounded-md bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 disabled:opacity-40 transition-colors"
+              >
+                ▼
+              </button>
+              <button 
+                aria-label="Delete section" 
+                onClick={handleDelete}
+                className="w-7 h-7 rounded-md bg-white hover:bg-red-50 border border-neutral-200 text-red-600 transition-colors"
+              >
+                🗑
+              </button>
             </div>
           </div>
         </>
       )}
 
-      {/* The block content (no internal controls; padding outside is managed by triggers) */}
+      {/* The block content */}
       <div ref={contentRef} className="relative z-10">{children}</div>
       {isEditing && (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">

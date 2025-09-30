@@ -6,6 +6,8 @@ import React, { useEffect } from "react";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import { debounce } from "@/app/lib/debounce";
+import { ImageExtension } from "./extentions/ImageExtention";
+import "./editor-styles.css";
 
 export interface TiptapEditorProps {
   editable?: boolean; // external control of edit mode
@@ -41,6 +43,10 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         StarterKit,
         Highlight,
         TextAlign.configure({ types: ["heading", "paragraph"] }),
+        ImageExtension.configure({
+          inline: false,
+          allowBase64: true,
+        }),
       ],
       content: frozenInitial,
       editable,
@@ -56,7 +62,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       editorProps: {
         attributes: {
           spellcheck: 'true',
-          class: "outline-none prose prose-zinc max-w-none outline-none prose-headings:m-0 prose-p:m-0 prose-ul:my-0 prose-ol:my-0 prose-li:my-0",
+          class: "outline-none prose prose-zinc max-w-none outline-none prose-headings:m-0 prose-p:m-0 prose-ul:my-0 prose-ol:my-0 prose-li:my-0 prose-img:m-0",
           role: "textbox",
           "aria-multiline": "true",
         },
