@@ -26,8 +26,14 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
   const [aspectRatio, setAspectRatio] = useState(1);
   
   const imageRef = useRef<HTMLImageElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
-  const resizeHandleRef = useRef<"se" | "sw" | null>(null);
+  const resizeHandleRef = useRef<"se" | "sw" | "e" | "w" | "s" | null>(null);
+  
+  // Constants for size limits
+  const MIN_WIDTH = 100;
+  const MIN_HEIGHT = 50;
+  const MAX_HEIGHT = 800; // Maximum height limit
 
   // Sync state with props
   useEffect(() => {
@@ -46,7 +52,7 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
     // Only set default size if not already set
     if (!width || !height) {
       const defaultWidth = Math.min(img.naturalWidth, 600);
-      const defaultHeight = defaultWidth / naturalAspectRatio;
+      const defaultHeight = Math.min(defaultWidth / naturalAspectRatio, MAX_HEIGHT);
       setCurrentWidth(defaultWidth);
       setCurrentHeight(defaultHeight);
       updateAttributes({ width: defaultWidth, height: defaultHeight });
@@ -68,19 +74,40 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
   if (!handleResizeMoveRef.current) {
     handleResizeMoveRef.current = (e: MouseEvent) => {
       const deltaX = e.clientX - resizeStartRef.current.x;
+      const deltaY = e.clientY - resizeStartRef.current.y;
       const handle = resizeHandleRef.current;
       
-      let newWidth: number;
+      let newWidth: number = resizeStartRef.current.width;
+      let newHeight: number = resizeStartRef.current.height;
       
       if (handle === "se") {
-        // Southeast handle - resize right
-        newWidth = Math.max(100, resizeStartRef.current.width + deltaX);
-      } else {
-        // Southwest handle - resize left
-        newWidth = Math.max(100, resizeStartRef.current.width - deltaX);
+        // Southeast handle - diagonal resize (maintain aspect ratio)
+        newWidth = Math.max(MIN_WIDTH, resizeStartRef.current.width + deltaX);
+        newHeight = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, newWidth / aspectRatioRef.current));
+        // Adjust width if height hits the limit
+        if (newHeight === MAX_HEIGHT) {
+          newWidth = newHeight * aspectRatioRef.current;
+        }
+      } else if (handle === "sw") {
+        // Southwest handle - diagonal resize left (maintain aspect ratio)
+        newWidth = Math.max(MIN_WIDTH, resizeStartRef.current.width - deltaX);
+        newHeight = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, newWidth / aspectRatioRef.current));
+        if (newHeight === MAX_HEIGHT) {
+          newWidth = newHeight * aspectRatioRef.current;
+        }
+      } else if (handle === "e") {
+        // East handle - horizontal resize only
+        newWidth = Math.max(MIN_WIDTH, resizeStartRef.current.width + deltaX);
+        // Don't change height, maintain independent sizing
+      } else if (handle === "w") {
+        // West handle - horizontal resize only
+        newWidth = Math.max(MIN_WIDTH, resizeStartRef.current.width - deltaX);
+        // Don't change height, maintain independent sizing
+      } else if (handle === "s") {
+        // South handle - vertical resize only
+        newHeight = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, resizeStartRef.current.height + deltaY));
+        // Don't change width, maintain independent sizing
       }
-      
-      const newHeight = newWidth / aspectRatioRef.current;
       
       setCurrentWidth(newWidth);
       setCurrentHeight(newHeight);
@@ -122,7 +149,7 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
 
   const handleResizeStart = (
     e: React.MouseEvent,
-    handle: "se" | "sw"
+    handle: "se" | "sw" | "e" | "w" | "s"
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -162,6 +189,35 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
 
   const handleFloatChange = (newFloat: "none" | "left" | "right") => {
     updateAttributes({ float: newFloat });
+  };
+
+  const handleReplaceImage = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Convert to base64 or URL
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const newSrc = event.target?.result as string;
+      if (newSrc) {
+        // Update the src attribute, keep existing dimensions
+        updateAttributes({ src: newSrc });
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Reset input value to allow selecting the same file again
+    e.target.value = '';
   };
 
   const getAlignmentStyles = () => {
@@ -273,9 +329,14 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
             isResizing ? "pointer-events-none" : ""
           }`}
           style={{
-            width: "100%",
-            height: "auto",
+            width: currentWidth ? `${currentWidth}px` : "100%",
+            height: currentHeight ? `${currentHeight}px` : "auto",
+            maxHeight: `${MAX_HEIGHT}px`,
             display: "block",
+            objectFit: "cover",
+            objectPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
           }}
           draggable={false}
         />
@@ -283,6 +344,7 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
         {/* Resize Handles - Show on hover or when selected */}
         {(selected || isResizing) && (
           <>
+            {/* Corner Handles - Diagonal resize (maintain aspect ratio) */}
             {/* Southeast Handle */}
             <div
               className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 border-2 border-white rounded-full cursor-se-resize z-10 hover:scale-125 transition-transform"
@@ -290,6 +352,7 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
               style={{
                 transform: "translate(50%, 50%)",
               }}
+              title="Diagonal resize (maintains aspect ratio)"
             />
             
             {/* Southwest Handle */}
@@ -299,10 +362,52 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
               style={{
                 transform: "translate(-50%, 50%)",
               }}
+              title="Diagonal resize (maintains aspect ratio)"
+            />
+            
+            {/* Edge Handles - Independent horizontal/vertical resize */}
+            {/* East Handle - Right edge */}
+            <div
+              className="absolute top-1/2 right-0 w-3 h-8 bg-blue-500 border-2 border-white rounded-l cursor-e-resize z-10 hover:scale-110 transition-transform"
+              onMouseDown={(e) => handleResizeStart(e, "e")}
+              style={{
+                transform: "translate(50%, -50%)",
+              }}
+              title="Resize width"
+            />
+            
+            {/* West Handle - Left edge */}
+            <div
+              className="absolute top-1/2 left-0 w-3 h-8 bg-blue-500 border-2 border-white rounded-r cursor-w-resize z-10 hover:scale-110 transition-transform"
+              onMouseDown={(e) => handleResizeStart(e, "w")}
+              style={{
+                transform: "translate(-50%, -50%)",
+              }}
+              title="Resize width"
+            />
+            
+            {/* South Handle - Bottom edge */}
+            <div
+              className="absolute bottom-0 left-1/2 w-8 h-3 bg-blue-500 border-2 border-white rounded-t cursor-s-resize z-10 hover:scale-110 transition-transform"
+              onMouseDown={(e) => handleResizeStart(e, "s")}
+              style={{
+                transform: "translate(-50%, 50%)",
+              }}
+              title="Resize height"
             />
 
             {/* Layout Toolbar */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mb-2 bg-white shadow-lg rounded-md border border-gray-200 flex gap-2 p-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+              {/* Replace Image Button */}
+              <div className="flex gap-1 border-r border-gray-200 pr-2">
+                <button
+                  onClick={handleReplaceImage}
+                  className="px-2 py-1 text-xs rounded hover:bg-gray-100"
+                  title="Replace Image"
+                >
+                  🔄 Replace
+                </button>
+              </div>
               {/* Float Controls */}
               <div className="flex gap-1 border-r border-gray-200 pr-2">
                 <button
@@ -376,6 +481,15 @@ export const ResizableImageComponent: React.FC<NodeViewProps> = ({
             {Math.round(currentWidth)} × {Math.round(currentHeight)}
           </div>
         )}
+
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
       </div>
     </NodeViewWrapper>
   );
