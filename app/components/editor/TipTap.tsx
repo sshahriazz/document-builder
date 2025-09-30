@@ -40,9 +40,60 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const editor = useEditor(
     {
       extensions: [
-        StarterKit,
-        Highlight,
-        TextAlign.configure({ types: ["heading", "paragraph"] }),
+        StarterKit.configure({
+          heading: {
+            levels: [1, 2, 3, 4, 5, 6],
+          },
+          paragraph: {
+            HTMLAttributes: {
+              class: 'text-base leading-relaxed',
+            },
+          },
+          bulletList: {
+            HTMLAttributes: {
+              class: 'list-disc list-outside ml-4',
+            },
+          },
+          orderedList: {
+            HTMLAttributes: {
+              class: 'list-decimal list-outside ml-4',
+            },
+          },
+          listItem: {
+            HTMLAttributes: {
+              class: 'leading-relaxed',
+            },
+          },
+          blockquote: {
+            HTMLAttributes: {
+              class: 'border-l-4 border-neutral-300 pl-4 italic text-neutral-700',
+            },
+          },
+          code: {
+            HTMLAttributes: {
+              class: 'bg-neutral-100 text-rose-600 px-1.5 py-0.5 rounded text-sm font-mono',
+            },
+          },
+          codeBlock: {
+            HTMLAttributes: {
+              class: 'bg-neutral-900 text-neutral-100 p-4 rounded-lg font-mono text-sm overflow-x-auto',
+            },
+          },
+          horizontalRule: {
+            HTMLAttributes: {
+              class: 'my-6 border-neutral-300',
+            },
+          },
+        }),
+        Highlight.configure({
+          HTMLAttributes: {
+            class: 'bg-yellow-200 text-neutral-900 px-0.5 rounded',
+          },
+        }),
+        TextAlign.configure({ 
+          types: ["heading", "paragraph"],
+          alignments: ['left', 'center', 'right', 'justify'],
+        }),
         ImageExtension.configure({
           inline: false,
           allowBase64: true,
@@ -62,7 +113,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       editorProps: {
         attributes: {
           spellcheck: 'true',
-          class: "outline-none prose prose-zinc max-w-none outline-none prose-headings:m-0 prose-p:m-0 prose-ul:my-0 prose-ol:my-0 prose-li:my-0 prose-img:m-0",
+          class: "outline-none prose prose-neutral max-w-none focus:outline-none",
           role: "textbox",
           "aria-multiline": "true",
         },

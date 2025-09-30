@@ -12,6 +12,7 @@ import Deliverables from "./Deliverables";
 import TermsAndConditions from "./TermsAndConditions";
 import FilesAndAttachments from "./FilesAndAttachments";
 import YourSection from "./YourSection";
+import ImageText from "./ImageText";
 import { debounce } from "@/app/lib/debounce";
 import BubbleMenu from "../../editor/BubbleMenu";
 import FloatingMenu from "../../editor/FloatingMenu";
@@ -82,5 +83,6 @@ export function renderBlockComponent(block: AnyDocumentBlock) {
   if (isBlockOfType(block, "terms-and-conditions")) return <TermsAndConditions block={block} />;
   if (isBlockOfType(block, "files-and-attachments")) return <FilesAndAttachments block={block} />;
   if (isBlockOfType(block, "your-section")) return <YourSection block={block} />;
+  if (isBlockOfType(block, "image-text")) return <ImageText block={block} />;
   return null;
 }

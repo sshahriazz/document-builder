@@ -2,7 +2,7 @@
 import type { CurrencyCode } from "@/app/types/currency";
 
 // Core discriminant
-export type BlockType = "rich-text" | "text-area" | "fee-summary" | "scope-of-services" | "deliverables" | "terms-and-conditions" | "files-and-attachments" | "your-section";
+export type BlockType = "rich-text" | "text-area" | "fee-summary" | "scope-of-services" | "deliverables" | "terms-and-conditions" | "files-and-attachments" | "your-section" | "image-text";
 
 // Content per type
 export interface RichTextContent { html: string }
@@ -33,6 +33,8 @@ export interface FilesAndAttachmentsContent {
 }
 // ----- Your Section -----
 export interface YourSectionContent { html: string }
+// ----- Image Text -----
+export interface ImageTextContent { html: string }
 // ----- Fee Summary (Packages / Multi-select) -----
 export type FeeStructure = 'single' | 'packages' | 'multi-select';
 export interface FeeLineItem {
@@ -65,6 +67,7 @@ export type BlockContentMap = {
   "terms-and-conditions": TermsAndConditionsContent;
   "files-and-attachments": FilesAndAttachmentsContent;
   "your-section": YourSectionContent;
+  "image-text": ImageTextContent;
 };
 export type AnyBlockContent = BlockContentMap[BlockType];
 
@@ -81,6 +84,7 @@ export type BlockStyleMap = {
   "terms-and-conditions": BaseStyle;
   "files-and-attachments": BaseStyle;
   "your-section": BaseStyle;
+  "image-text": BaseStyle;
 };
 export type AnyBlockStyle = BlockStyleMap[BlockType];
 

@@ -2,10 +2,19 @@ import { nanoid } from "nanoid";
 import { BlockType, BlockContentMap, BlockStyleMap } from "./documentBlocks";
 import { useDocumentConfig } from "./documentConfig";
 
-export function createBlock(type: BlockType): { type: BlockType; content: BlockContentMap[BlockType]; style?: BlockStyleMap[BlockType]; uuid: string } {
+export function createBlock(type: BlockType): {
+  type: BlockType;
+  content: BlockContentMap[BlockType];
+  style?: BlockStyleMap[BlockType];
+  uuid: string;
+} {
   switch (type) {
     case "rich-text":
-      return { type, uuid: nanoid(), content: { html: "<p>New rich text block</p>" } };
+      return {
+        type,
+        uuid: nanoid(),
+        content: { html: "<p>New rich text block</p>" },
+      };
     case "text-area":
       return { type, uuid: nanoid(), content: { text: "New notes" } };
     case "scope-of-services":
@@ -100,33 +109,51 @@ export function createBlock(type: BlockType): { type: BlockType; content: BlockC
           options: [
             {
               id: nanoid(),
-              summary: 'Starter Package',
-              items: [ { id: nanoid(), name: 'One-time Fee', qty: 1, unitPrice: 2500 } ],
+              summary: "Starter Package",
+              items: [
+                { id: nanoid(), name: "One-time Fee", qty: 1, unitPrice: 2500 },
+              ],
               taxRate: 0,
               currency: cfg.currency,
               selected: false,
             },
             {
               id: nanoid(),
-              summary: 'Starter Package',
-              items: [ { id: nanoid(), name: 'Monthly Fee', qty: 6, unitPrice: 2000 } ],
+              summary: "Starter Package",
+              items: [
+                { id: nanoid(), name: "Monthly Fee", qty: 6, unitPrice: 2000 },
+              ],
               taxRate: 0,
               currency: cfg.currency,
-              selected: cfg.defaultStructure === 'packages',
+              selected: cfg.defaultStructure === "packages",
             },
             {
               id: nanoid(),
-              summary: 'Premium Package',
-              items: [ { id: nanoid(), name: 'Monthly Fee', qty: 6, unitPrice: 3000 } ],
+              summary: "Premium Package",
+              items: [
+                { id: nanoid(), name: "Monthly Fee", qty: 6, unitPrice: 3000 },
+              ],
               taxRate: 0,
               currency: cfg.currency,
               selected: false,
-            }
-          ]
-        }
+            },
+          ],
+        },
+      };
+    case "image-text":
+      return {
+        type,
+        uuid: nanoid(),
+        content: {
+          html: '<h2><strong>Your Section Title</strong></h2><p class="text-base leading-relaxed"></p><img src="https://app.hellobonsai.com/uploads/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaWxoTXpKaU5ETXdaUzA1WkRSaExUUmpaVGN0T1dFMU15MHdNVFF4T1RVeVlqSTJOVEFHT2daRlZBPT0iLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--e2d2b7253a008356b2b880330b7ffdef4b264cc4/collaboration.jpg" width="355" height="237" data-align="left" data-float="left"><p class="text-base leading-relaxed"></p><p class="text-base leading-relaxed">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est.</p><p class="text-base leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. test</p><p class="text-base leading-relaxed">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.</p><p class="text-base leading-relaxed"></p><p class="text-base leading-relaxed"></p>',
+        } as any,
       };
     default:
-      return { type, uuid: nanoid(), content: {} as BlockContentMap[BlockType] };
+      return {
+        type,
+        uuid: nanoid(),
+        content: {} as BlockContentMap[BlockType],
+      };
   }
 }
 export const blockTypeLabels: Record<BlockType, string> = {
@@ -134,8 +161,9 @@ export const blockTypeLabels: Record<BlockType, string> = {
   "text-area": "Text Area",
   "fee-summary": "Fee Summary",
   "scope-of-services": "Scope of Services",
-  "deliverables": "Deliverables",
+  deliverables: "Deliverables",
   "terms-and-conditions": "Terms and Conditions",
   "files-and-attachments": "Files & Attachments",
   "your-section": "Your Section",
+  "image-text": "Image & Text",
 };

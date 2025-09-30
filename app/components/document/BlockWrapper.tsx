@@ -5,6 +5,7 @@ import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDi
 import { useDocumentBlocksStore } from "@/app/store/document/documentBlocksStore";
 import type { AnyDocumentBlock, BlockType } from "@/app/store/document/documentBlocks";
 import { createBlock, blockTypeLabels } from "@/app/store/document/blockFactory";
+import { BlockGridSelector } from "./BlockGridSelector";
 
 interface BlockWrapperProps {
   block: AnyDocumentBlock;
@@ -172,17 +173,16 @@ export const BlockWrapper: React.FC<BlockWrapperProps> = React.memo(({ block, ch
       {/* The block content */}
       <div ref={contentRef} className="relative z-10">{children}</div>
       {isEditing && (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="3xl" scrollBehavior="inside">
           <ModalContent>
             {(close) => (
               <>
-                <ModalHeader>Select Block Type</ModalHeader>
-                <ModalBody>
-                  <div className="grid gap-2">
-                    {Object.entries(blockTypeLabels).map(([type, label]) => (
-                      <Button key={type} variant="flat" onPress={() => performInsert(type as BlockType)}>{label}</Button>
-                    ))}
-                  </div>
+                <ModalHeader className="flex flex-col gap-1">
+                  <h2 className="text-xl font-semibold">Select Block Type</h2>
+                  <p className="text-sm text-neutral-500 font-normal">Choose a block to add to your document</p>
+                </ModalHeader>
+                <ModalBody className="py-6">
+                  <BlockGridSelector onSelectBlock={performInsert} />
                 </ModalBody>
                 <ModalFooter>
                   <Button variant="light" onPress={close}>Cancel</Button>

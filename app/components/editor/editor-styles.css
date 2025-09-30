@@ -1,64 +1,305 @@
-/* Custom styles for TipTap editor - Image floating and text wrapping */
+/* ============================================
+   TIPTAP EDITOR - PROFESSIONAL TYPOGRAPHY
+   Industry-leading text rendering setup
+   ============================================ */
 
-/* Ensure proper text wrapping around floated images */
+/* ===== BASE EDITOR STYLES ===== */
+.ProseMirror {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ===== HEADINGS - Professional hierarchy ===== */
+.ProseMirror h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #0a0a0a;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #0a0a0a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: #171717;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #262626;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #404040;
+  margin-top: 0.875rem;
+  margin-bottom: 0.375rem;
+}
+
+.ProseMirror h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #525252;
+  margin-top: 0.75rem;
+  margin-bottom: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== PARAGRAPHS ===== */
+.ProseMirror p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #262626;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: visible;
+  clear: none; /* CRITICAL: Allow text to wrap around floated images */
+}
+
+.ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== LISTS - Better spacing and alignment ===== */
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror li {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+  line-height: 1.75;
+  color: #262626;
+}
+
+.ProseMirror li > p {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+}
+
+.ProseMirror ul ul,
+.ProseMirror ul ol,
+.ProseMirror ol ul,
+.ProseMirror ol ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== BLOCKQUOTES ===== */
+.ProseMirror blockquote {
+  border-left: 4px solid #d4d4d4;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: #525252;
+  font-size: 1.0625rem;
+}
+
+.ProseMirror blockquote p {
+  color: inherit;
+}
+
+/* ===== CODE ===== */
+.ProseMirror code {
+  background-color: #f5f5f5;
+  color: #dc2626;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-weight: 400;
+}
+
+.ProseMirror pre {
+  background-color: #171717;
+  color: #fafafa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.ProseMirror pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* ===== HORIZONTAL RULE ===== */
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ===== LINKS ===== */
+.ProseMirror a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-decoration-color: #93c5fd;
+  text-underline-offset: 2px;
+  transition: all 0.15s ease;
+}
+
+.ProseMirror a:hover {
+  color: #1d4ed8;
+  text-decoration-color: #2563eb;
+}
+
+/* ===== STRONG & EMPHASIS ===== */
+.ProseMirror strong {
+  font-weight: 700;
+  color: #0a0a0a;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ProseMirror s {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* ===== MARK/HIGHLIGHT ===== */
+.ProseMirror mark {
+  background-color: #fef08a;
+  color: #1a1a1a;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.125rem;
+}
+
+/* ===== IMAGE HANDLING ===== */
 .ProseMirror .image-wrapper {
   max-width: 100%;
   vertical-align: top;
   line-height: 0;
-  margin: 0;
+  margin: 1.5rem 0;
   padding: 0;
+  position: relative;
 }
 
-/* Ensure floated images align properly with text */
 .ProseMirror .image-wrapper > div {
   line-height: 0;
   margin: 0;
 }
 
-/* When image is floated, ensure it aligns to top */
+/* Floated images */
+.ProseMirror .image-wrapper[style*="float: left"] {
+  margin-right: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.ProseMirror .image-wrapper[style*="float: right"] {
+  margin-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
 .ProseMirror .image-wrapper[style*="float: left"],
 .ProseMirror .image-wrapper[style*="float: right"] {
-  margin-top: 0 !important;
+  max-width: 50%;
 }
 
-.ProseMirror .image-wrapper[style*="float: left"] > div,
-.ProseMirror .image-wrapper[style*="float: right"] > div {
-  margin-top: 0 !important;
-}
-
-/* Paragraphs should not clear floats - allow text to wrap */
-.ProseMirror p {
-  overflow: visible;
-  line-height: 1.75;
-  margin: 0;
-}
-
-/* Image node wrapper should allow floats to work */
-.ProseMirror .node-image {
-  margin: 0;
-  padding: 0;
-}
-
-/* Ensure images don't overflow their containers */
 .ProseMirror img {
   max-width: 100%;
   height: auto;
   display: block;
+  border-radius: 0.375rem;
 }
 
-/* Prevent toolbar from being cut off */
-.ProseMirror .image-wrapper {
-  position: relative;
-  min-height: 50px;
+/* Image selection state */
+.ProseMirror .image-wrapper.ring-2 {
+  border-radius: 0.5rem;
+  padding: 2px;
 }
 
-/* Ensure resize handles are visible */
 .ProseMirror .image-wrapper .group:hover {
   z-index: 10;
 }
 
-/* Better selection ring for floated images */
-.ProseMirror .image-wrapper.ring-2 {
-  border-radius: 0.375rem;
-  padding: 2px;
+/* ===== PLACEHOLDER ===== */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #a3a3a3;
+  pointer-events: none;
+  height: 0;
+}
+
+/* ===== SELECTION ===== */
+.ProseMirror ::selection {
+  background-color: #dbeafe;
+}
+
+.ProseMirror ::-moz-selection {
+  background-color: #dbeafe;
+}
+
+/* ===== FOCUS STATE ===== */
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* ===== PRINT OPTIMIZATION ===== */
+@media print {
+  .ProseMirror {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  .ProseMirror h1 { font-size: 24pt; }
+  .ProseMirror h2 { font-size: 20pt; }
+  .ProseMirror h3 { font-size: 16pt; }
+  .ProseMirror h4 { font-size: 14pt; }
+  .ProseMirror h5 { font-size: 12pt; }
+  .ProseMirror h6 { font-size: 12pt; }
 }
